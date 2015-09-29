@@ -1,0 +1,29 @@
+{
+  "name": "sunsistemo",
+  "version": "0.0.0",
+  "description": "Simulation of the solar system",
+  "scripts": {
+    "start": "webpack-dev-server",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sunsistemo/sunsistemo.git"
+  },
+  "keywords": [
+    "solar",
+    "system",
+    "gravity",
+    "sunsistemo"
+  ],
+  "license": "GPL-3.0+",
+  "bugs": {
+    "url": "https://github.com/sunsistemo/sunsistemo/issues"
+  },
+  "devDependencies": {
+    "babel-core": "^5.8.25",
+    "babel-loader": "^5.3.2",
+    "webpack": "^1.12.2",
+    "webpack-dev-server": "^1.12.0"
+  }
+}
