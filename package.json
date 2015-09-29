@@ -3,8 +3,10 @@
   "version": "0.0.0",
   "description": "Simulation of the solar system",
   "scripts": {
-    "start": "webpack-dev-server",
-    "test": "echo \"Error: no test specified\" && exit 1"
+      "start": "webpack-dev-server",
+      "prepublish": "webpack",
+      "prestart": "webpack",
+      "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
