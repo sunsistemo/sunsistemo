@@ -47,7 +47,7 @@ function init() {
 
 
 function animate() {
-    bodies = calc.symplectic_euler(bodies, 0.001);
+    bodies = calc.leapfrog(bodies, 0.001);
 
     for (let i = 0; i < bodies.length; i++) {
         let pos = bodies[i].r;
