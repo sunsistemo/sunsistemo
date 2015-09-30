@@ -111,7 +111,7 @@ function leapfrog(b, h) {
 
     bodies = [];
     for (let i = 0; i < b.length; i++) {
-        let vHalf = b[i].v.clone().add(accel(i).multiplyScalar(.5*h))
+        let vHalf = b[i].v.clone().add(accel(i).multiplyScalar(.5*h));
         let v = vHalf.clone().add(accel(i).multiplyScalar(h));
         let r = b[i].r.clone().add(vHalf.clone().multiplyScalar(h));
 
@@ -123,5 +123,6 @@ function leapfrog(b, h) {
 
 module.exports = {
     bodies: bodies,
-    symplectic_euler: symplectic_euler
+    symplectic_euler: symplectic_euler,
+    leapfrog: leapfrog
 };
