@@ -14,10 +14,6 @@ function init() {
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     camera.position.z = 400;
-    light = new THREE.PointLight(0xfcd440, 1, 0);
-    light.position.set(250,0,0);
-    scene.add(light);
-
 
     // orbitcontrols
     controls = new THREE.OrbitControls(camera);
@@ -37,7 +33,7 @@ function init() {
     }
 
     // sun
-    let light = new THREE.PointLight(0xffffff);
+    let light = new THREE.PointLight(0xfcd440);
     spheres[0].add(light);
 
     // overall light
