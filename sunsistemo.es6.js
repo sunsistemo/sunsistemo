@@ -3,7 +3,8 @@ let controls, stats;
 
 let calc = require("./calc.es6.js");
 
-let bodies = calc.bodies;
+// let bodies = calc.bodies;
+let bodies = calc.genBodies(100);
 let [spheres] = init();
 
 
@@ -12,7 +13,7 @@ animate_leapfrog();
 
 function init() {
     scene = new THREE.Scene();
-    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 100000);
     camera.position.z = 400;
 
     // orbitcontrols
@@ -23,10 +24,11 @@ function init() {
     // spheres
     let spheres = [];
     for (let b of bodies) {
-        let geometry = new THREE.SphereGeometry(20, 32, 32);
-        let material = new THREE.MeshPhongMaterial();
+        let geometry = new THREE.SphereGeometry(15, 8, 8);
+        let material = new THREE.MeshPhongMaterial({ map:b.texture});
+        // let material = new THREE.MeshBasicMaterial({ map:b.texture});
         let sphere = new THREE.Mesh(geometry, material);
-
+        console.log(material.map);
         sphere.position.set(b.r.x, b.r.y, b.r.z);
         scene.add(sphere);
         spheres.push(sphere);
@@ -87,3 +89,5 @@ window.addEventListener('resize', onWindowResize, true);
 function render() {
     renderer.render(scene, camera);
 }
+
+
