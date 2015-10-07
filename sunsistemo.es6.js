@@ -24,7 +24,7 @@ function init() {
     // spheres
     let spheres = [];
     for (let b of bodies) {
-        let geometry = new THREE.SphereGeometry(15, 8, 8);
+        let geometry = new THREE.SphereGeometry(10, 16, 16);
         let material = new THREE.MeshPhongMaterial({ map:b.texture});
         // let material = new THREE.MeshBasicMaterial({ map:b.texture});
         let sphere = new THREE.Mesh(geometry, material);
@@ -35,7 +35,7 @@ function init() {
     }
 
     // sun
-    let light = new THREE.PointLight(0xfcd440);
+    let light = new THREE.PointLight(0xfcd440, 2);
     spheres[0].add(light);
 
     // overall light

@@ -32,7 +32,17 @@ class Body {
 // let bodies = [sun, earth];
 // let loader = THREE.ImageUtils.loadTexture();
 let loader = THREE.ImageUtils;
-let allTextures = [loader.loadTexture("textures/jupiter.jpg"), loader.loadTexture("textures/mercury.jpg"), loader.loadTexture("textures/moon.jpg")]
+let allTextures = [
+    loader.loadTexture("textures/mercurymap.jpg"),
+    loader.loadTexture("textures/venusmap.jpg"),
+    loader.loadTexture("textures/earthmap.jpg"),
+    loader.loadTexture("textures/marsmap.jpg"),
+    loader.loadTexture("textures/jupitermap.jpg"), 
+    loader.loadTexture("textures/saturnmap.jpg"), 
+    loader.loadTexture("textures/uranusmap.jpg"),
+    loader.loadTexture("textures/plutomap.jpg"),
+    loader.loadTexture("textures/moonmap.jpg")
+    ]
 
 
 let s1 = new Body(1E19, new Vec3(0, 0, 0), new Vec3(0, 2, 0), allTextures[0]);
@@ -48,7 +58,7 @@ function genBodies(n) {
 
     bodies.push(new Body(1E18, new Vec3(0, 0, 0), new Vec3(0, 0, 0)));
     for (let i = 0; i < n; i++) {
-        bodies.push(new Body(1E16, 
+        bodies.push(new Body(5E16, 
             new Vec3(getRandomInt(-300,300), getRandomInt(-300,300), getRandomInt(-300,300)), 
             new Vec3(getRandomInt(-900,900), getRandomInt(-900,900), getRandomInt(-900,900)),
             allTextures[getRandomInt(0, allTextures.length)]
