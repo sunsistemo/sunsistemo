@@ -93,8 +93,7 @@ function symplectic_euler(b, h) {
 
 
 function leapfrog(b, h) {
-    // b is a list of Body objects
-
+    
     function accel(i) {
         // Compute acceleration on body i by all other bodies
         let a = new Vec3(0, 0, 0);
@@ -111,11 +110,8 @@ function leapfrog(b, h) {
 
     bodies = [];
     for (let i = 0; i < b.length; i++) {
-        let vHalf = b[i].v.clone().add(accel(i).multiplyScalar(.5*h));
-        let v = vHalf.clone().add(accel(i).multiplyScalar(h));
-        let r = b[i].r.clone().add(vHalf.clone().multiplyScalar(h));
-
-        bodies.push(new Body(b[i].m, r, v));
+        let v = b[i].v.clone().add(accel(i).multiplyScalar(.5*h));
+        bodies.push(new Body(b[i].m, b[i].r, v));
     }
 
     return bodies;

@@ -1,17 +1,23 @@
-let scene, camera, renderer;
+let scene, camera, light, renderer;
 let controls, stats;
 
 let calc = require("./calc.es6.js");
 
 let bodies = calc.bodies;
 let [spheres] = init();
-animate();
+
+
+animate_leapfrog();
 
 
 function init() {
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     camera.position.z = 400;
+    light = new THREE.PointLight(0xfcd440, 1, 0);
+    light.position.set(250,0,0);
+    scene.add(light);
+
 
     // orbitcontrols
     controls = new THREE.OrbitControls(camera);
@@ -45,9 +51,14 @@ function init() {
     return [spheres];
 }
 
+function animate_leapfrog(){
+    bodies = calc.leapfrog(bodies, 0.001);
+
+    requestAnimationFrame(animate);
+}
 
 function animate() {
-    bodies = calc.leapfrog(bodies, 0.001);
+    bodies = calc.symplectic_euler(bodies, 0.001);
 
     for (let i = 0; i < bodies.length; i++) {
         let pos = bodies[i].r;
