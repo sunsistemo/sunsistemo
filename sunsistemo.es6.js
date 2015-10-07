@@ -28,7 +28,6 @@ function init() {
         let material = new THREE.MeshPhongMaterial({ map:b.texture});
         // let material = new THREE.MeshBasicMaterial({ map:b.texture});
         let sphere = new THREE.Mesh(geometry, material);
-        console.log(material.map);
         sphere.position.set(b.r.x, b.r.y, b.r.z);
         scene.add(sphere);
         spheres.push(sphere);
