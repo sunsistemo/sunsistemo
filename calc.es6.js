@@ -9,7 +9,7 @@ class Body {
         this.m = m;
         this.r = r;
         this.v = v;
-        this.texture = texture
+        this.texture = texture;
     }
 
     set(r, v) {
@@ -20,7 +20,6 @@ class Body {
     clone() {
         return new Body(this.m, this.r, this.v, this.texture);
     }
-
 }
 
 // let sun = new Body(1.98855E30,
@@ -33,16 +32,17 @@ class Body {
 // let loader = THREE.ImageUtils.loadTexture();
 let loader = THREE.ImageUtils;
 let allTextures = [
-    loader.loadTexture("textures/mercurymap.jpg"),
-    loader.loadTexture("textures/venusmap.jpg"),
     loader.loadTexture("textures/earthmap.jpg"),
+    loader.loadTexture("textures/jupitermap.jpg"),
     loader.loadTexture("textures/marsmap.jpg"),
-    loader.loadTexture("textures/jupitermap.jpg"), 
-    loader.loadTexture("textures/saturnmap.jpg"), 
-    loader.loadTexture("textures/uranusmap.jpg"),
+    loader.loadTexture("textures/mercurymap.jpg"),
+    loader.loadTexture("textures/moonmap.jpg"),
+    loader.loadTexture("textures/neptunemap.jpg"),
     loader.loadTexture("textures/plutomap.jpg"),
-    loader.loadTexture("textures/moonmap.jpg")
-    ]
+    loader.loadTexture("textures/saturnmap.jpg"),
+    loader.loadTexture("textures/uranusmap.jpg"),
+    loader.loadTexture("textures/venusmap.jpg"),
+];
 
 
 let s1 = new Body(1E19, new Vec3(0, 0, 0), new Vec3(0, 2, 0), allTextures[0]);
@@ -54,22 +54,17 @@ let bodies = [s1, s2, s3];
 function genBodies(n) {
     let bodies = [];
 
-
-
     bodies.push(new Body(1E18, new Vec3(0, 0, 0), new Vec3(0, 0, 0)));
     for (let i = 0; i < n; i++) {
-        bodies.push(new Body(5E16, 
-            new Vec3(getRandomInt(-300,300), getRandomInt(-300,300), getRandomInt(-300,300)), 
+        bodies.push(new Body(5E16,
+            new Vec3(getRandomInt(-300,300), getRandomInt(-300,300), getRandomInt(-300,300)),
             new Vec3(getRandomInt(-900,900), getRandomInt(-900,900), getRandomInt(-900,900)),
             allTextures[getRandomInt(0, allTextures.length)]
-            )
-        )
+            ));
     }
-    
-    return bodies
+
+    return bodies;
 }
-
-
 
 
 function euler(b, h) {
@@ -85,7 +80,7 @@ function euler(b, h) {
             }
             // Compute distance vector between the i-th and j-th body
             let v = b[j].r.clone().sub(b[i].r);
-            // Compute the scalar part of the newtonian accelleration
+            // Compute the scalar part of the Newtonian acceleration
             let s = G * b[j].m / Math.pow(v.length(), 3);
             a.add(v.multiplyScalar(s));
         }
@@ -131,7 +126,7 @@ function symplectic_euler(b, h) {
 
 
 function leapfrog(b, h) {
-    
+
     function accel(i) {
         // Compute acceleration on body i by all other bodies
         let a = new Vec3(0, 0, 0);
