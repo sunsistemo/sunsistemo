@@ -22,7 +22,6 @@ class Body {
     clone() {
         return new Body(this.m, this.r, this.v, this.rad, this.texture);
     }
-
 }
 let loader = THREE.ImageUtils;
 let allTextures = [
@@ -53,6 +52,12 @@ function gen3Bodies(){
     let bodies = [s1, s2, s3];
     return bodies;
 }
+
+
+let s1 = new Body(1E19, new Vec3(0, 0, 0), new Vec3(0, 2, 0), allTextures[0]);
+let s2 = new Body(1E18, new Vec3(200, 0, 0), new Vec3(0, 900, 0), allTextures[1]);
+let s3 = new Body(1E18, new Vec3(-200, 0, 0), new Vec3(0, -900, 0), allTextures[2]);
+let bodies = [s1, s2, s3];
 // bodies = [];
 
 function genBodies(n, bodyTexture) {
@@ -62,15 +67,15 @@ function genBodies(n, bodyTexture) {
 
 
 
-    bodies.push(new Body(1E19, new Vec3(0, 0, 0), new Vec3(0, 0, 0)));
+    bodies.push(new Body(1E18, new Vec3(0, 0, 0), new Vec3(0, 0, 0)));
     for (let i = 0; i < n; i++) {
-        bodies.push(new Body(5E16, 
-            new Vec3(getRandomInt(-300,300), getRandomInt(-300,300), getRandomInt(-300,300)), 
+        bodies.push(new Body(5E16,
+            new Vec3(getRandomInt(-300,300), getRandomInt(-300,300), getRandomInt(-300,300)),
             new Vec3(getRandomInt(-900,900), getRandomInt(-900,900), getRandomInt(-900,900)),
             allTextures[getRandomInt(0, allTextures.length)]
-            )
-        )
+            ));
     }
+
     
     return bodies
 }
@@ -93,6 +98,7 @@ function genBodiesRot(n, bodyTexture) {
     }
     
     return bodies
+
 }
 
 
@@ -109,7 +115,7 @@ function euler(b, h) {
             }
             // Compute distance vector between the i-th and j-th body
             let v = b[j].r.clone().sub(b[i].r);
-            // Compute the scalar part of the newtonian accelleration
+            // Compute the scalar part of the Newtonian acceleration
             let s = G * b[j].m / Math.pow(v.length(), 3);
             a.add(v.multiplyScalar(s));
         }
@@ -155,7 +161,7 @@ function symplectic_euler(b, h) {
 
 
 function leapfrog(b, h) {
-    
+
     function accel(i) {
         // Compute acceleration on body i by all other bodies
         let a = new Vec3(0, 0, 0);

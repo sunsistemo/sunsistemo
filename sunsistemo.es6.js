@@ -40,7 +40,7 @@ function init() {
     spheres[0].add(light);
 
     // overall light
-    let ambient = new THREE.AmbientLight( 0x404040 );
+    let ambient = new THREE.AmbientLight(0x404040);
     scene.add(ambient);
 
     renderer = new THREE.WebGLRenderer();
@@ -92,5 +92,3 @@ window.addEventListener('resize', onWindowResize, true);
 function render() {
     renderer.render(scene, camera);
 }
-
-
