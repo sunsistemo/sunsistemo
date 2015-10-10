@@ -4,7 +4,9 @@ let controls, stats;
 let calc = require("./calc.es6.js");
 
 // let bodies = calc.bodies;
-let bodies = calc.genBodies(100);
+let bodyTexture = true
+let bodies = calc.genBodiesRot(400, bodyTexture);
+let sphereP = 16
 let [spheres] = init();
 
 
@@ -24,7 +26,7 @@ function init() {
     // spheres
     let spheres = [];
     for (let b of bodies) {
-        let geometry = new THREE.SphereGeometry(10, 16, 16);
+        let geometry = new THREE.SphereGeometry(b.rad, sphereP, sphereP);
         let material = new THREE.MeshPhongMaterial({ map:b.texture});
         // let material = new THREE.MeshBasicMaterial({ map:b.texture});
         let sphere = new THREE.Mesh(geometry, material);
@@ -64,6 +66,8 @@ function animate_leapfrog(){
 
 function animate() {
     bodies = calc.symplectic_euler(bodies, 0.001);
+    [bodies, spheres] = calc.removeLostBodies(bodies,spheres, scene, 2000);
+
 
     for (let i = 0; i < bodies.length; i++) {
         let pos = bodies[i].r;

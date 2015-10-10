@@ -5,24 +5,37 @@ let G = 6.67408E-11;
 let Vec3 = THREE.Vector3;
 
 class Body {
-    constructor(m, r, v, texture) {
+    constructor(m, r, v, rad, texture) {
         this.m = m;
         this.r = r;
         this.v = v;
-        this.texture = texture
+        this.rad = rad;
+        this.texture = texture;
     }
 
-    set(r, v) {
+    set(r, v, rad) {
         this.r = r;
         this.v = v;
+        this.rad = rad
     }
 
     clone() {
-        return new Body(this.m, this.r, this.v, this.texture);
+        return new Body(this.m, this.r, this.v, this.rad, this.texture);
     }
 
 }
-
+let loader = THREE.ImageUtils;
+let allTextures = [
+            loader.loadTexture("textures/mercurymap.jpg"),
+            loader.loadTexture("textures/venusmap.jpg"),
+            loader.loadTexture("textures/earthmap.jpg"),
+            loader.loadTexture("textures/marsmap.jpg"),
+            loader.loadTexture("textures/jupitermap.jpg"), 
+            loader.loadTexture("textures/saturnmap.jpg"), 
+            loader.loadTexture("textures/uranusmap.jpg"),
+            loader.loadTexture("textures/plutomap.jpg"),
+            loader.loadTexture("textures/moonmap.jpg")
+            ]
 // let sun = new Body(1.98855E30,
 //                    new Vec3(0, 0, 0),
 //                    new Vec3(0, 0, 0));
@@ -31,32 +44,25 @@ class Body {
 //                      new Vec3(0 , 30.29E3, 0));
 // let bodies = [sun, earth];
 // let loader = THREE.ImageUtils.loadTexture();
-let loader = THREE.ImageUtils;
-let allTextures = [
-    loader.loadTexture("textures/mercurymap.jpg"),
-    loader.loadTexture("textures/venusmap.jpg"),
-    loader.loadTexture("textures/earthmap.jpg"),
-    loader.loadTexture("textures/marsmap.jpg"),
-    loader.loadTexture("textures/jupitermap.jpg"), 
-    loader.loadTexture("textures/saturnmap.jpg"), 
-    loader.loadTexture("textures/uranusmap.jpg"),
-    loader.loadTexture("textures/plutomap.jpg"),
-    loader.loadTexture("textures/moonmap.jpg")
-    ]
 
 
-let s1 = new Body(1E19, new Vec3(0, 0, 0), new Vec3(0, 2, 0), allTextures[0]);
-let s2 = new Body(1E18, new Vec3(200, 0, 0), new Vec3(0, 900, 0), allTextures[1]);
-let s3 = new Body(1E18, new Vec3(-200, 0, 0), new Vec3(0, -900, 0), allTextures[2]);
-let bodies = [s1, s2, s3];
+function gen3Bodies(){
+    let s1 = new Body(1E19, new Vec3(0, 0, 0), new Vec3(0, 2, 0), 8, allTextures[0]);
+    let s2 = new Body(1E18, new Vec3(200, 0, 0), new Vec3(0, 900, 0), 8, allTextures[1]);
+    let s3 = new Body(1E18, new Vec3(-200, 0, 0), new Vec3(0, -900, 0), 8, allTextures[2]);
+    let bodies = [s1, s2, s3];
+    return bodies;
+}
 // bodies = [];
 
-function genBodies(n) {
+function genBodies(n, bodyTexture) {
+    
+    if (!bodyTexture){allTextures = []}
     let bodies = [];
 
 
 
-    bodies.push(new Body(1E18, new Vec3(0, 0, 0), new Vec3(0, 0, 0)));
+    bodies.push(new Body(1E19, new Vec3(0, 0, 0), new Vec3(0, 0, 0)));
     for (let i = 0; i < n; i++) {
         bodies.push(new Body(5E16, 
             new Vec3(getRandomInt(-300,300), getRandomInt(-300,300), getRandomInt(-300,300)), 
@@ -69,7 +75,25 @@ function genBodies(n) {
     return bodies
 }
 
+function genBodiesRot(n, bodyTexture) {
+    if (!bodyTexture){allTextures = []}
+    let bodies = [];
 
+    let angMomVec = new Vec3(0,4,0);
+
+    bodies.push(new Body(1E18, new Vec3(0, 0, 0), new Vec3(0, 0, 0), 8));
+    for (let i = 0; i < n; i++) {
+        let posVec = new Vec3(getRandomInt(-300,300), getRandomInt(-300,300), getRandomInt(-300,300));
+        let velVec = new Vec3(0,0,0);
+        velVec.crossVectors(posVec,angMomVec).multiplyScalar(Math.random());
+        bodies.push(new Body(5E13, posVec, velVec, 8,
+            allTextures[getRandomInt(0, allTextures.length)]
+            )
+        )
+    }
+    
+    return bodies
+}
 
 
 function euler(b, h) {
@@ -156,13 +180,44 @@ function leapfrog(b, h) {
     return bodies;
 }
 
+function getGravCenter(b) {
+    let gravCenter = new Vec3(0,0,0);
+    let totMass = 0;
+    for (let i = 0; i < b.length; i++) {
+
+        gravCenter.add(b[i].r.clone().multiplyScalar(b[i].m));
+        totMass += b[i].m;
+    }
+
+    return gravCenter.divideScalar(totMass)
+}
+
+function removeLostBodies(b, spheres, scene, range){
+    let gravCent = getGravCenter(b);
+    for (let i = 0; i < b.length; i++) {
+        let pos = b[i].r.clone();
+        let gravCBodyDist = new Vec3(0,0,0)
+        gravCBodyDist.subVectors(pos, gravCent);
+
+        if (gravCBodyDist.length() > range) {
+            b.splice(i,1);
+            scene.remove(spheres[i]);
+            spheres.splice(i,1);
+        }
+    }
+    return [b, spheres]
+}
+
+
 function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }                               // from: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
 
 module.exports = {
-    bodies: bodies,
+    removeLostBodies: removeLostBodies,
+    getGravCenter: getGravCenter,
     genBodies: genBodies,
+    genBodiesRot: genBodiesRot,
     symplectic_euler: symplectic_euler,
     leapfrog: leapfrog
 };
