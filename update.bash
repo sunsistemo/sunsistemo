@@ -2,7 +2,7 @@
 path="sunsistemo.github.io/"
 
 cp index.html "$path"
-cp -r textures/ "$path"/textures
+cp -r textures/ "$path"
 webpack --optimize-minimize --output-path "$path"
 cd "$path"
 git add -A
