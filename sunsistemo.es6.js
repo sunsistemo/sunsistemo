@@ -5,7 +5,7 @@ let calc = require("./calc.es6.js");
 
 // let bodies = calc.bodies;
 let bodyTexture = true;
-let bodies = calc.genBodiesRot(40, bodyTexture);
+let bodies = calc.genBodiesRot(400, bodyTexture);
 let sphereP = 16;
 let [spheres] = init();
 
@@ -27,8 +27,7 @@ function init() {
     let spheres = [];
     for (let b of bodies) {
         let geometry = new THREE.SphereGeometry(b.rad, sphereP, sphereP);
-        let material = new THREE.MeshPhongMaterial({ map:b.texture});
-        // let material = new THREE.MeshBasicMaterial({ map:b.texture});
+        let material = new THREE.MeshPhongMaterial({map:b.getTexture()});
         let sphere = new THREE.Mesh(geometry, material);
         sphere.position.set(b.r.x, b.r.y, b.r.z);
         scene.add(sphere);
@@ -66,12 +65,14 @@ function animate_leapfrog() {
 
 function animate() {
     bodies = calc.symplectic_euler(bodies, 0.001);
-    [bodies, spheres] = calc.removeLostBodies(bodies,spheres, scene, 2000);
-
+    [bodies, spheres] = calc.removeLostBodies(bodies, spheres, scene, 2000);
 
     for (let i = 0; i < bodies.length; i++) {
         let pos = bodies[i].r;
         spheres[i].position.set(pos.x, pos.y, pos.z);
+        spheres[i].rotation.x += bodies[i].rot.x;
+        spheres[i].rotation.y += bodies[i].rot.y;
+        spheres[i].rotation.z += bodies[i].rot.z;
     }
 
     requestAnimationFrame(animate);

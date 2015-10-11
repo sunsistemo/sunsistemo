@@ -5,37 +5,45 @@ let G = 6.67408E-11;
 let Vec3 = THREE.Vector3;
 
 class Body {
-    constructor(m, r, v, rad, texture) {
+    constructor(m, r, v, rad, texture, rot) {
         this.m = m;
         this.r = r;
         this.v = v;
         this.rad = rad;
-        this.texture = allTextures[texture];
+        this.texture = texture;
+        this.rot = rot;
     }
 
-    set(r, v, rad) {
+    getTexture() {
+        return allTextures[this.texture];
+    }
+
+    set(r, v) {
         this.r = r;
         this.v = v;
-        this.rad = rad;
+        return this;
     }
 
     clone() {
-        return new Body(this.m, this.r, this.v, this.rad, this.texture);
+        return new Body(this.m, this.r, this.v, this.rad, this.texture, this.rot);
     }
 }
 
-let loader = THREE.ImageUtils;
+
+let loadTexture = texture => THREE.ImageUtils.loadTexture("textures/" + texture);
+
 let allTextures = {
-    "earth": loader.loadTexture("textures/earthmap.jpg"),
-    "jupiter": loader.loadTexture("textures/jupitermap.jpg"),
-    "mars": loader.loadTexture("textures/marsmap.jpg"),
-    "mercury": loader.loadTexture("textures/mercurymap.jpg"),
-    "moon": loader.loadTexture("textures/moonmap.jpg"),
-    "neptune": loader.loadTexture("textures/neptunemap.jpg"),
-    "pluto": loader.loadTexture("textures/plutomap.jpg"),
-    "saturn": loader.loadTexture("textures/saturnmap.jpg"),
-    "uranus": loader.loadTexture("textures/uranusmap.jpg"),
-    "venus": loader.loadTexture("textures/venusmap.jpg")
+    "earth": loadTexture("earthmap.jpg"),
+    "jupiter": loadTexture("jupitermap.jpg"),
+    "mars": loadTexture("marsmap.jpg"),
+    "mercury": loadTexture("mercurymap.jpg"),
+    "moon": loadTexture("moonmap.jpg"),
+    "neptune": loadTexture("neptunemap.jpg"),
+    "pluto": loadTexture("plutomap.jpg"),
+    "saturn": loadTexture("saturnmap.jpg"),
+    "sun": loadTexture("sunmap.jpg"),
+    "uranus": loadTexture("uranusmap.jpg"),
+    "venus": loadTexture("venusmap.jpg")
 };
 
 function getRandomTexture() {
@@ -86,16 +94,18 @@ function genBodiesRot(n, bodyTexture) {
 
     let angMomVec = new Vec3(0,4,0);
 
-    bodies.push(new Body(1E18, new Vec3(0, 0, 0), new Vec3(0, 0, 0), 8));
+    bodies.push(new Body(1E18, new Vec3(0, 0, 0), new Vec3(0, 0, 0), 8, "sun",
+                         new Vec3(0, 0.01, 0)));
     for (let i = 0; i < n; i++) {
         let posVec = new Vec3(getRandomInt(-300,300), getRandomInt(-300,300), getRandomInt(-300,300));
         let velVec = new Vec3(0,0,0);
+        let rot = () => Math.random() / 10;
+        let rotation = new Vec3(rot(), rot(), rot());
         velVec.crossVectors(posVec,angMomVec).multiplyScalar(Math.random());
-        bodies.push(new Body(5E13, posVec, velVec, 8, getRandomTexture()));
+        bodies.push(new Body(5E13, posVec, velVec, 8, getRandomTexture(), rotation));
     }
 
     return bodies;
-
 }
 
 
@@ -123,7 +133,7 @@ function euler(b, h) {
     for (let i = 0; i < b.length; i++) {
         let r = b[i].r.clone().add(b[i].v.clone().multiplyScalar(h));
         let v = b[i].v.clone().add(accel(i).multiplyScalar(h));
-        bodies.push(new Body(b[i].m, r, v));
+        bodies.push(b[i].clone().set(r, v));
     }
 
     return bodies;
@@ -150,7 +160,7 @@ function symplectic_euler(b, h) {
     for (let i = 0; i < b.length; i++) {
         let v = b[i].v.clone().add(accel(i).multiplyScalar(h));
         let r = b[i].r.clone().add(v.clone().multiplyScalar(h));
-        bodies.push(new Body(b[i].m, r, v));
+        bodies.push(b[i].clone().set(r, v));
     }
 
     return bodies;
@@ -177,7 +187,7 @@ function leapfrog(b, h) {
     for (let i = 0; i < b.length; i++) {
         let r = b[i].r.clone().add(b[i].v.clone().multiplyScalar(h));
         let v = b[i].v.clone().add(accel(i).multiplyScalar(.5*h));
-        bodies.push(new Body(b[i].m, r, v));
+        bodies.push(b[i].clone().set(r, v));
     }
 
     return bodies;
@@ -187,7 +197,6 @@ function getGravCenter(b) {
     let gravCenter = new Vec3(0,0,0);
     let totMass = 0;
     for (let i = 0; i < b.length; i++) {
-
         gravCenter.add(b[i].r.clone().multiplyScalar(b[i].m));
         totMass += b[i].m;
     }
@@ -220,6 +229,7 @@ module.exports = {
     removeLostBodies: removeLostBodies,
     getGravCenter: getGravCenter,
     genBodies: genBodies,
+    gen3Bodies: gen3Bodies,
     genBodiesRot: genBodiesRot,
     symplectic_euler: symplectic_euler,
     leapfrog: leapfrog
