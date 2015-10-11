@@ -4,9 +4,9 @@ let controls, stats;
 let calc = require("./calc.es6.js");
 
 // let bodies = calc.bodies;
-let bodyTexture = true
-let bodies = calc.genBodiesRot(400, bodyTexture);
-let sphereP = 16
+let bodyTexture = true;
+let bodies = calc.genBodiesRot(40, bodyTexture);
+let sphereP = 16;
 let [spheres] = init();
 
 
@@ -58,7 +58,7 @@ function init() {
     return [spheres];
 }
 
-function animate_leapfrog(){
+function animate_leapfrog() {
     bodies = calc.leapfrog(bodies, 0.001);
 
     requestAnimationFrame(animate);

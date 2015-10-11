@@ -10,31 +10,40 @@ class Body {
         this.r = r;
         this.v = v;
         this.rad = rad;
-        this.texture = texture;
+        this.texture = allTextures[texture];
     }
 
     set(r, v, rad) {
         this.r = r;
         this.v = v;
-        this.rad = rad
+        this.rad = rad;
     }
 
     clone() {
         return new Body(this.m, this.r, this.v, this.rad, this.texture);
     }
 }
+
 let loader = THREE.ImageUtils;
-let allTextures = [
-            loader.loadTexture("textures/mercurymap.jpg"),
-            loader.loadTexture("textures/venusmap.jpg"),
-            loader.loadTexture("textures/earthmap.jpg"),
-            loader.loadTexture("textures/marsmap.jpg"),
-            loader.loadTexture("textures/jupitermap.jpg"), 
-            loader.loadTexture("textures/saturnmap.jpg"), 
-            loader.loadTexture("textures/uranusmap.jpg"),
-            loader.loadTexture("textures/plutomap.jpg"),
-            loader.loadTexture("textures/moonmap.jpg")
-            ]
+let allTextures = {
+    "earth": loader.loadTexture("textures/earthmap.jpg"),
+    "jupiter": loader.loadTexture("textures/jupitermap.jpg"),
+    "mars": loader.loadTexture("textures/marsmap.jpg"),
+    "mercury": loader.loadTexture("textures/mercurymap.jpg"),
+    "moon": loader.loadTexture("textures/moonmap.jpg"),
+    "neptune": loader.loadTexture("textures/neptunemap.jpg"),
+    "pluto": loader.loadTexture("textures/plutomap.jpg"),
+    "saturn": loader.loadTexture("textures/saturnmap.jpg"),
+    "uranus": loader.loadTexture("textures/uranusmap.jpg"),
+    "venus": loader.loadTexture("textures/venusmap.jpg")
+};
+
+function getRandomTexture() {
+    let planets = ["earth", "jupiter", "mars", "mercury", "moon", "neptune",
+                   "pluto", "saturn", "uranus", "venus"];
+    return planets[getRandomInt(0, planets.length)];
+}
+
 // let sun = new Body(1.98855E30,
 //                    new Vec3(0, 0, 0),
 //                    new Vec3(0, 0, 0));
@@ -42,42 +51,33 @@ let allTextures = [
 //                      new Vec3(-147.09E3, 0, 0),
 //                      new Vec3(0 , 30.29E3, 0));
 // let bodies = [sun, earth];
-// let loader = THREE.ImageUtils.loadTexture();
 
 
-function gen3Bodies(){
-    let s1 = new Body(1E19, new Vec3(0, 0, 0), new Vec3(0, 2, 0), 8, allTextures[0]);
-    let s2 = new Body(1E18, new Vec3(200, 0, 0), new Vec3(0, 900, 0), 8, allTextures[1]);
-    let s3 = new Body(1E18, new Vec3(-200, 0, 0), new Vec3(0, -900, 0), 8, allTextures[2]);
+function gen3Bodies() {
+    let s1 = new Body(1E19, new Vec3(0, 0, 0), new Vec3(0, 2, 0), 8, "mercury");
+    let s2 = new Body(1E18, new Vec3(200, 0, 0), new Vec3(0, 900, 0), 8, "venus");
+    let s3 = new Body(1E18, new Vec3(-200, 0, 0), new Vec3(0, -900, 0), 8, "earth");
     let bodies = [s1, s2, s3];
     return bodies;
 }
 
 
-let s1 = new Body(1E19, new Vec3(0, 0, 0), new Vec3(0, 2, 0), allTextures[0]);
-let s2 = new Body(1E18, new Vec3(200, 0, 0), new Vec3(0, 900, 0), allTextures[1]);
-let s3 = new Body(1E18, new Vec3(-200, 0, 0), new Vec3(0, -900, 0), allTextures[2]);
-let bodies = [s1, s2, s3];
-// bodies = [];
-
 function genBodies(n, bodyTexture) {
-    
+
     if (!bodyTexture){allTextures = []}
     let bodies = [];
 
-
-
     bodies.push(new Body(1E18, new Vec3(0, 0, 0), new Vec3(0, 0, 0)));
     for (let i = 0; i < n; i++) {
-        bodies.push(new Body(5E16,
+        bodies.push(new Body(
+            5E16,
             new Vec3(getRandomInt(-300,300), getRandomInt(-300,300), getRandomInt(-300,300)),
             new Vec3(getRandomInt(-900,900), getRandomInt(-900,900), getRandomInt(-900,900)),
-            allTextures[getRandomInt(0, allTextures.length)]
-            ));
+            getRandomTexture()
+        ));
     }
 
-    
-    return bodies
+    return bodies;
 }
 
 function genBodiesRot(n, bodyTexture) {
@@ -91,13 +91,10 @@ function genBodiesRot(n, bodyTexture) {
         let posVec = new Vec3(getRandomInt(-300,300), getRandomInt(-300,300), getRandomInt(-300,300));
         let velVec = new Vec3(0,0,0);
         velVec.crossVectors(posVec,angMomVec).multiplyScalar(Math.random());
-        bodies.push(new Body(5E13, posVec, velVec, 8,
-            allTextures[getRandomInt(0, allTextures.length)]
-            )
-        )
+        bodies.push(new Body(5E13, posVec, velVec, 8, getRandomTexture()));
     }
-    
-    return bodies
+
+    return bodies;
 
 }
 
@@ -195,14 +192,14 @@ function getGravCenter(b) {
         totMass += b[i].m;
     }
 
-    return gravCenter.divideScalar(totMass)
+    return gravCenter.divideScalar(totMass);
 }
 
 function removeLostBodies(b, spheres, scene, range){
     let gravCent = getGravCenter(b);
     for (let i = 0; i < b.length; i++) {
         let pos = b[i].r.clone();
-        let gravCBodyDist = new Vec3(0,0,0)
+        let gravCBodyDist = new Vec3(0, 0, 0);
         gravCBodyDist.subVectors(pos, gravCent);
 
         if (gravCBodyDist.length() > range) {
@@ -211,7 +208,7 @@ function removeLostBodies(b, spheres, scene, range){
             spheres.splice(i,1);
         }
     }
-    return [b, spheres]
+    return [b, spheres];
 }
 
 
