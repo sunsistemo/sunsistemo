@@ -1,5 +1,4 @@
 // physical constants from http://physics.nist.gov/cuu/Constants/index.html
-
 let G = 6.67408E-11;
 
 let Vec3 = THREE.Vector3;
@@ -108,31 +107,29 @@ function genBodiesRot(n, bodyTexture) {
     return bodies;
 }
 
+function accel(i, b) {
+    // Compute acceleration due to gravity on body i by all other bodies
+    let a = new Vec3(0, 0, 0);
+    for (let j = 0; j < b.length; j++) {
+        // compute the acceleration vector for body i due to body j
+        if (j === i) {
+            continue;
+        }
+        // Compute distance vector between the i-th and j-th body
+        let v = b[j].r.clone().sub(b[i].r);
+        // Compute the scalar part of the Newtonian acceleration
+        let s = G * b[j].m / Math.pow(v.length(), 3);
+        a.add(v.multiplyScalar(s));
+    }
+    return a;
+}
 
 function euler(b, h) {
     // b is a list of Body objects
-
-    function accel(i) {
-        // Compute acceleration on body i by all other bodies
-        let a = new Vec3(0, 0, 0);
-        for (let j = 0; j < b.length; j++) {
-            // compute the acceleration vector for body i due to body j
-            if (j === i) {
-                continue;
-            }
-            // Compute distance vector between the i-th and j-th body
-            let v = b[j].r.clone().sub(b[i].r);
-            // Compute the scalar part of the Newtonian acceleration
-            let s = G * b[j].m / Math.pow(v.length(), 3);
-            a.add(v.multiplyScalar(s));
-        }
-        return a;
-    }
-
     let bodies = [];
     for (let i = 0; i < b.length; i++) {
         let r = b[i].r.clone().add(b[i].v.clone().multiplyScalar(h));
-        let v = b[i].v.clone().add(accel(i).multiplyScalar(h));
+        let v = b[i].v.clone().add(accel(i, b).multiplyScalar(h));
         bodies.push(b[i].clone().set(r, v));
     }
 
@@ -141,24 +138,9 @@ function euler(b, h) {
 
 function symplectic_euler(b, h) {
     // b is a list of Body objects
-
-    function accel(i) {
-        // Compute acceleration on body i by all other bodies
-        let a = new Vec3(0, 0, 0);
-        for (let j = 0; j < b.length; j++) {
-            if (j === i) {
-                continue;
-            }
-            let v = b[j].r.clone().sub(b[i].r);
-            let s = G * b[j].m / Math.pow(v.length(), 3);
-            a.add(v.multiplyScalar(s));
-        }
-        return a;
-    }
-
     let bodies = [];
     for (let i = 0; i < b.length; i++) {
-        let v = b[i].v.clone().add(accel(i).multiplyScalar(h));
+        let v = b[i].v.clone().add(accel(i, b).multiplyScalar(h));
         let r = b[i].r.clone().add(v.clone().multiplyScalar(h));
         bodies.push(b[i].clone().set(r, v));
     }
@@ -168,25 +150,10 @@ function symplectic_euler(b, h) {
 
 
 function leapfrog(b, h) {
-
-    function accel(i) {
-        // Compute acceleration on body i by all other bodies
-        let a = new Vec3(0, 0, 0);
-        for (let j = 0; j < b.length; j++) {
-            if (j === i) {
-                continue;
-            }
-            let v = b[j].r.clone().sub(b[i].r);
-            let s = G * b[j].m / Math.pow(v.length(), 3);
-            a.add(v.multiplyScalar(s));
-        }
-        return a;
-    }
-
     let bodies = [];
     for (let i = 0; i < b.length; i++) {
         let r = b[i].r.clone().add(b[i].v.clone().multiplyScalar(h));
-        let v = b[i].v.clone().add(accel(i).multiplyScalar(.5*h));
+        let v = b[i].v.clone().add(accel(i, b).multiplyScalar(.5*h));
         bodies.push(b[i].clone().set(r, v));
     }
 
