@@ -99,7 +99,7 @@ function genBodiesRot(n, bodyTexture) {
         let posVec = new Vec3(getRandomInt(-300,300), getRandomInt(-300,300), getRandomInt(-300,300));
         let velVec = new Vec3(0,0,0);
         let rot = () => Math.random() / 10;
-        let rotation = new Vec3(rot(), rot(), rot());
+        let rotation = new Vec3(0, rot(), 0);
         velVec.crossVectors(posVec,angMomVec).multiplyScalar(Math.random());
         bodies.push(new Body(5E13, posVec, velVec, 8, getRandomTexture(), rotation));
     }
