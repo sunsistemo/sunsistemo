@@ -4,7 +4,7 @@ let G = 6.67408E-11;
 let Vec3 = THREE.Vector3;
 let planets = ["earth", "jupiter", "mars", "mercury", "moon", "neptune",
                "pluto", "saturn", "uranus", "venus"];
-let balls = ["tennisball"];
+let balls = ["tennisball", "softball"];
 let textures = ["sun", "earth", "jupiter", "mars", "mercury", "moon", "neptune",
                 "pluto", "saturn", "uranus", "venus", "clouds", "tennisball"];
 // let loadTexture = texture => THREE.ImageUtils.loadTexture("textures/" + texture);
@@ -26,11 +26,10 @@ allTextures = { "sun":     loadTextures("sun", true, false, false),
                 "uranus":  loadTextures("uranus", true, false, false),
                 "neptune": loadTextures("neptune", true, false, false),
                 "pluto":   loadTextures("pluto", true, true,  false),
-                "tennisball": loadTextures("tennisball", true, true, true)
+                "tennisball": loadTextures("tennisball", true, true, true),
+                "softball": loadTextures("softball", true, true, false),
 };
-for (let t in textures) {
-    allTextures[textures[t]] = loadTextures(textures[t]);
-}
+
 
 console.log(allTextures);
 
@@ -80,23 +79,24 @@ function loadTextures(textureName, textOn, bumpOn, specOn){
     }
     if (specOn) {
         let specularMap = THREE.ImageUtils.loadTexture("textures/" + textureName + "specular.jpg");
+        specularMap.minFilter = THREE.LinearFilter;
         fullTexture.specularMap = specularMap;
     }
 
     return fullTexture
 }
 
-function loadTextures(textureName){
-    let texture = THREE.ImageUtils.loadTexture("textures/" + textureName + "map.jpg" );
-    texture.minFilter = THREE.LinearFilter;
+// function loadTextures(textureName){
+//     let texture = THREE.ImageUtils.loadTexture("textures/" + textureName + "map.jpg" );
+//     texture.minFilter = THREE.LinearFilter;
 
-    let bumpMap = THREE.ImageUtils.loadTexture("textures/" + textureName + "bump.jpg");
-    bumpMap.minFilter = THREE.LinearFilter;
+//     let bumpMap = THREE.ImageUtils.loadTexture("textures/" + textureName + "bump.jpg");
+//     bumpMap.minFilter = THREE.LinearFilter;
 
-    let specularMap = THREE.ImageUtils.loadTexture("textures/" + textureName + "specular.jpg");
+//     let specularMap = THREE.ImageUtils.loadTexture("textures/" + textureName + "specular.jpg");
 
-    return {"texture": texture, "bumpMap": bumpMap, "specularMap": specularMap};
-}
+//     return {"texture": texture, "bumpMap": bumpMap, "specularMap": specularMap};
+// }
 
 function getRandomFromList(list) {
 
