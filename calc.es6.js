@@ -89,7 +89,11 @@ function genBodies(n, bodyTexture) {
         ));
     }
 
-    return bodies;
+    return {
+        bodies: bodies,
+        stepsize: 0.001,
+        camera: {x: 0, y: 0, z: 400}
+    };
 }
 
 function genBodiesRot(n, bodyTexture) {
@@ -109,7 +113,11 @@ function genBodiesRot(n, bodyTexture) {
         bodies.push(new Body(5E13, posVec, velVec, 8, getRandomFromList(balls), rotation));
     }
 
-    return bodies;
+    return {
+        bodies: bodies,
+        stepsize: 0.001,
+        camera: {x: 0, y: 0, z: 400}
+    };
 }
 
 function accel(i, b) {

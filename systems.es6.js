@@ -96,7 +96,10 @@ function genSolarSystem() {
 
     return {
         bodies: [sun, mercury, venus, earth, mars, jupiter, saturn, uranus,
-                 neptune, pluto]
+                 neptune, pluto],
+        stepsize: 0.5 * (60 * 60 * 24),
+        scalePosition: vec => vec.multiplyScalar(1E-07),
+        cameraPosition: {x: 0, y: 0, z:1000}
     };
 }
 
@@ -105,5 +108,15 @@ function gen3Bodies() {
     let s2 = new Body(1E18, new Vec3(200, 0, 0), new Vec3(0, 900, 0), 8, "venus");
     let s3 = new Body(1E18, new Vec3(-200, 0, 0), new Vec3(0, -900, 0), 8, "earth");
     let bodies = [s1, s2, s3];
-    return bodies;
+
+    return {
+        bodies: bodies,
+        stepsize: 0.001,
+        camera: {x: 0, y: 0, z: 400}
+    };
 }
+
+module.exports = {
+    genSolarSystem: genSolarSystem,
+    gen3Bodies: gen3Bodies
+};
