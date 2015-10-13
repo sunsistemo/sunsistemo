@@ -10,7 +10,6 @@ let sphereP = 32;
 let [spheres] = init();
 
 
-// animate_leapfrog();
 animate();
 
 

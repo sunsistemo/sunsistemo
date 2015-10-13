@@ -99,7 +99,7 @@ function genSolarSystem() {
                  neptune, pluto],
         stepsize: 0.5 * (60 * 60 * 24),
         scalePosition: vec => vec.multiplyScalar(1E-07),
-        cameraPosition: {x: 0, y: 0, z:1000}
+        cameraPosition: {x: 0, y: 0, z: 1000}
     };
 }
 
