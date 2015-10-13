@@ -3,10 +3,15 @@ let controls, stats;
 
 let calc = require("./calc.es6.js");
 
-// let bodies = calc.bodies;
 let bodyTexture = true;
+<<<<<<< HEAD
 let bodies = calc.genBodiesRot(400, bodyTexture);
 let sphereP = 16;
+=======
+let system = calc.genBodiesRot(400, bodyTexture);
+let bodies = system.bodies;
+let sphereP = 32;
+>>>>>>> f438377ff6b90474dcef03809d46b6a76ff79f0f
 let [spheres] = init();
 
 
@@ -17,7 +22,8 @@ animate();
 function init() {
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 100000);
-    camera.position.z = 400;
+    camera.position.set(system.camera.x, system.camera.y, system.camera.z);
+    scene.add(camera);
 
     // orbitcontrols
     controls = new THREE.OrbitControls(camera);
@@ -63,13 +69,13 @@ function init() {
 }
 
 function animate_leapfrog() {
-    bodies = calc.leapfrog(bodies, 0.001);
+    bodies = calc.leapfrog(bodies, system.stepsize);
 
     requestAnimationFrame(animate);
 }
 
 function animate() {
-    bodies = calc.symplectic_euler(bodies, 0.001);
+    bodies = calc.symplectic_euler(bodies, system.stepsize);
     [bodies, spheres] = calc.removeLostBodies(bodies, spheres, scene, 2000);
 
     for (let i = 0; i < bodies.length; i++) {

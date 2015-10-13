@@ -3,13 +3,14 @@ let G = 6.67408E-11;
 
 let Vec3 = THREE.Vector3;
 let planets = ["earth", "jupiter", "mars", "mercury", "moon", "neptune",
-                   "pluto", "saturn", "uranus", "venus"];
+               "pluto", "saturn", "uranus", "venus"];
 let balls = ["tennisball"];
 let textures = ["sun", "earth", "jupiter", "mars", "mercury", "moon", "neptune",
-"pluto", "saturn", "uranus", "venus", "clouds", "tennisball"];
+                "pluto", "saturn", "uranus", "venus", "clouds", "tennisball"];
 // let loadTexture = texture => THREE.ImageUtils.loadTexture("textures/" + texture);
-let allTextures = {}
+let allTextures = {};
 
+<<<<<<< HEAD
 // for (let t in textures) {
 //     allTextures[textures[t]] = loadTextures(textures[t])
 // }
@@ -27,6 +28,12 @@ allTextures = { "sun":     loadTextures("sun", true, false, false),
                 "pluto":   loadTextures("pluto", true, true,  false),
                 "tennisball": loadTextures("tennisball", true, true, true)
 };
+=======
+for (let t in textures) {
+    allTextures[textures[t]] = loadTextures(textures[t]);
+}
+
+>>>>>>> f438377ff6b90474dcef03809d46b6a76ff79f0f
 console.log(allTextures);
 
 class Body {
@@ -61,6 +68,7 @@ class Body {
     }
 }
 
+<<<<<<< HEAD
 function loadTextures(textureName, textOn, bumpOn, specOn){
     let fullTexture = {}
     if (textOn) {
@@ -79,30 +87,24 @@ function loadTextures(textureName, textOn, bumpOn, specOn){
     }
 
     return fullTexture
+=======
+function loadTextures(textureName){
+    let texture = THREE.ImageUtils.loadTexture("textures/" + textureName + "map.jpg" );
+    texture.minFilter = THREE.LinearFilter;
+
+    let bumpMap = THREE.ImageUtils.loadTexture("textures/" + textureName + "bump.jpg");
+    bumpMap.minFilter = THREE.LinearFilter;
+
+    let specularMap = THREE.ImageUtils.loadTexture("textures/" + textureName + "specular.jpg");
+
+    return {"texture": texture, "bumpMap": bumpMap, "specularMap": specularMap};
+>>>>>>> f438377ff6b90474dcef03809d46b6a76ff79f0f
 }
 
 function getRandomFromList(list) {
-   
+
     return list[getRandomInt(0, list.length)];
 }
-
-// let sun = new Body(1.98855E30,
-//                    new Vec3(0, 0, 0),
-//                    new Vec3(0, 0, 0));
-// let earth = new Body(5.997219E24,
-//                      new Vec3(-147.09E3, 0, 0),
-//                      new Vec3(0 , 30.29E3, 0));
-// let bodies = [sun, earth];
-
-
-function gen3Bodies() {
-    let s1 = new Body(1E19, new Vec3(0, 0, 0), new Vec3(0, 2, 0), 8, "mercury");
-    let s2 = new Body(1E18, new Vec3(200, 0, 0), new Vec3(0, 900, 0), 8, "venus");
-    let s3 = new Body(1E18, new Vec3(-200, 0, 0), new Vec3(0, -900, 0), 8, "earth");
-    let bodies = [s1, s2, s3];
-    return bodies;
-}
-
 
 function genBodies(n, bodyTexture) {
 
@@ -119,7 +121,11 @@ function genBodies(n, bodyTexture) {
         ));
     }
 
-    return bodies;
+    return {
+        bodies: bodies,
+        stepsize: 0.001,
+        camera: {x: 0, y: 0, z: 400}
+    };
 }
 
 function genBodiesRot(n, bodyTexture) {
@@ -139,7 +145,11 @@ function genBodiesRot(n, bodyTexture) {
         bodies.push(new Body(5E13, posVec, velVec, 8, getRandomFromList(balls), rotation));
     }
 
-    return bodies;
+    return {
+        bodies: bodies,
+        stepsize: 0.001,
+        camera: {x: 0, y: 0, z: 400}
+    };
 }
 
 function accel(i, b) {
@@ -231,7 +241,6 @@ module.exports = {
     removeLostBodies: removeLostBodies,
     getGravCenter: getGravCenter,
     genBodies: genBodies,
-    gen3Bodies: gen3Bodies,
     genBodiesRot: genBodiesRot,
     symplectic_euler: symplectic_euler,
     leapfrog: leapfrog
