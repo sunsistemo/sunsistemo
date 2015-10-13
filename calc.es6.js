@@ -10,23 +10,29 @@ let textures = ["sun", "earth", "jupiter", "mars", "mercury", "moon", "neptune",
 // let loadTexture = texture => THREE.ImageUtils.loadTexture("textures/" + texture);
 let allTextures = {};
 
+
+// for (let t in textures) {
+//     allTextures[textures[t]] = loadTextures(textures[t])
+// }
+
+allTextures = { "sun":     loadTextures("sun", true, false, false),
+                "mercury": loadTextures("mercury", true, true,  false),    
+                "venus":   loadTextures("venus", true, true,  false),
+                "earth":   loadTextures("earth", true, true,  false),
+                "mars":    loadTextures("mars", true, true,  false),
+                "moon":    loadTextures("moon", true, true,  false),
+                "jupiter": loadTextures("jupiter", true, false, false),
+                "saturn":  loadTextures("saturn", true, false, false),
+                "uranus":  loadTextures("uranus", true, false, false),
+                "neptune": loadTextures("neptune", true, false, false),
+                "pluto":   loadTextures("pluto", true, true,  false),
+                "tennisball": loadTextures("tennisball", true, true, true)
+};
 for (let t in textures) {
     allTextures[textures[t]] = loadTextures(textures[t]);
 }
 
 console.log(allTextures);
-//     "earth":   [loadTexture("earth"],
-//     "jupiter": [loadTexture(""],
-//     "mars":    [loadTexture("earth"],
-//     "mercury": [loadTexture("earth"],
-//     "moon":    [loadTexture("earth"],
-//     "neptune": [loadTexture("earth"],
-//     "pluto":   [loadTexture("earth"],
-//     "saturn":  [loadTexture("earth"],
-//     "sun":     [loadTexture("earth"],
-//     "uranus":  [loadTexture("earth"],
-//     "venus":   [loadTexture("earth"],
-// };
 
 class Body {
     constructor(m, r, v, rad, texture, rot) {
@@ -45,6 +51,9 @@ class Body {
     getBumpMap() {
         return allTextures[this.texture]["bumpMap"];
     }
+    getSpecularMap() {
+        return allTextures[this.texture]["specularMap"];
+    }
 
     set(r, v) {
         this.r = r;
@@ -55,6 +64,26 @@ class Body {
     clone() {
         return new Body(this.m, this.r, this.v, this.rad, this.texture, this.rot);
     }
+}
+
+function loadTextures(textureName, textOn, bumpOn, specOn){
+    let fullTexture = {}
+    if (textOn) {
+        let texture = THREE.ImageUtils.loadTexture("textures/" + textureName + "map.jpg" );
+        texture.minFilter = THREE.LinearFilter;
+        fullTexture.texture = texture;
+    }
+    if (bumpOn) {
+        let bumpMap = THREE.ImageUtils.loadTexture("textures/" + textureName + "bump.jpg");
+        bumpMap.minFilter = THREE.LinearFilter;
+        fullTexture.bumpMap = bumpMap;
+    }
+    if (specOn) {
+        let specularMap = THREE.ImageUtils.loadTexture("textures/" + textureName + "specular.jpg");
+        fullTexture.specularMap = specularMap;
+    }
+
+    return fullTexture
 }
 
 function loadTextures(textureName){
