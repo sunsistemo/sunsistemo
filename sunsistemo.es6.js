@@ -6,7 +6,7 @@ let calc = require("./calc.es6.js");
 // let bodies = calc.bodies;
 let bodyTexture = true;
 let bodies = calc.genBodiesRot(400, bodyTexture);
-let sphereP = 32;
+let sphereP = 16;
 let [spheres] = init();
 
 
@@ -32,6 +32,7 @@ function init() {
         material.map = b.getTexture();
         material.bumpMap = b.getBumpMap();
         material.bumpScale = 0.2;
+        material.specularMap = b.getSpecularMap();
         let sphere = new THREE.Mesh(geometry, material);
         sphere.position.set(b.r.x, b.r.y, b.r.z);
         scene.add(sphere);
