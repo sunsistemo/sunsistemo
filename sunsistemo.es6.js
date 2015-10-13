@@ -41,7 +41,7 @@ function init() {
     }
 
     // sun
-    let light = new THREE.PointLight(0xfcd440, 2);
+    let light = new THREE.PointLight(0xfcd440, 2, 2000);
     spheres[0].add(light);
 
     // overall light
