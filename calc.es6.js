@@ -2,6 +2,31 @@
 let G = 6.67408E-11;
 
 let Vec3 = THREE.Vector3;
+let planets = ["earth", "jupiter", "mars", "mercury", "moon", "neptune",
+                   "pluto", "saturn", "uranus", "venus"];
+let balls = ["tennisball"];
+let textures = ["sun", "earth", "jupiter", "mars", "mercury", "moon", "neptune",
+"pluto", "saturn", "uranus", "venus", "clouds", "tennisball"];
+// let loadTexture = texture => THREE.ImageUtils.loadTexture("textures/" + texture);
+let allTextures = {}
+
+for (let t in textures) {
+    allTextures[textures[t]] = loadTextures(textures[t])
+}
+
+console.log(allTextures);
+//     "earth":   [loadTexture("earth"],
+//     "jupiter": [loadTexture(""],
+//     "mars":    [loadTexture("earth"],
+//     "mercury": [loadTexture("earth"],
+//     "moon":    [loadTexture("earth"],
+//     "neptune": [loadTexture("earth"],
+//     "pluto":   [loadTexture("earth"],
+//     "saturn":  [loadTexture("earth"],
+//     "sun":     [loadTexture("earth"],
+//     "uranus":  [loadTexture("earth"],
+//     "venus":   [loadTexture("earth"],
+// };
 
 class Body {
     constructor(m, r, v, rad, texture, rot) {
@@ -14,7 +39,11 @@ class Body {
     }
 
     getTexture() {
-        return allTextures[this.texture];
+        return allTextures[this.texture]["texture"];
+    }
+
+    getBumpMap() {
+        return allTextures[this.texture]["bumpMap"];
     }
 
     set(r, v) {
@@ -28,27 +57,21 @@ class Body {
     }
 }
 
+function loadTextures(textureName){
+        let texture = THREE.ImageUtils.loadTexture("textures/" + textureName + "map.jpg" );
+        texture.minFilter = THREE.LinearFilter;
 
-let loadTexture = texture => THREE.ImageUtils.loadTexture("textures/" + texture);
+        let bumpMap = THREE.ImageUtils.loadTexture("textures/" + textureName + "bump.jpg");
+        bumpMap.minFilter = THREE.LinearFilter;
 
-let allTextures = {
-    "earth": loadTexture("earthmap.jpg"),
-    "jupiter": loadTexture("jupitermap.jpg"),
-    "mars": loadTexture("marsmap.jpg"),
-    "mercury": loadTexture("mercurymap.jpg"),
-    "moon": loadTexture("moonmap.jpg"),
-    "neptune": loadTexture("neptunemap.jpg"),
-    "pluto": loadTexture("plutomap.jpg"),
-    "saturn": loadTexture("saturnmap.jpg"),
-    "sun": loadTexture("sunmap.jpg"),
-    "uranus": loadTexture("uranusmap.jpg"),
-    "venus": loadTexture("venusmap.jpg")
-};
+        let specularMap = THREE.ImageUtils.loadTexture("textures/" + textureName + "specular.jpg");
 
-function getRandomTexture() {
-    let planets = ["earth", "jupiter", "mars", "mercury", "moon", "neptune",
-                   "pluto", "saturn", "uranus", "venus"];
-    return planets[getRandomInt(0, planets.length)];
+    return {"texture": texture, "bumpMap": bumpMap, "specularMap": specularMap}
+}
+
+function getRandomFromList(list) {
+   
+    return list[getRandomInt(0, list.length)];
 }
 
 // let sun = new Body(1.98855E30,
@@ -80,7 +103,7 @@ function genBodies(n, bodyTexture) {
             5E16,
             new Vec3(getRandomInt(-300,300), getRandomInt(-300,300), getRandomInt(-300,300)),
             new Vec3(getRandomInt(-900,900), getRandomInt(-900,900), getRandomInt(-900,900)),
-            getRandomTexture()
+            getRandomFromList(planets)
         ));
     }
 
@@ -98,10 +121,10 @@ function genBodiesRot(n, bodyTexture) {
     for (let i = 0; i < n; i++) {
         let posVec = new Vec3(getRandomInt(-300,300), getRandomInt(-300,300), getRandomInt(-300,300));
         let velVec = new Vec3(0,0,0);
-        let rot = () => Math.random() / 10;
+        let rot = () => Math.random() / 30;
         let rotation = new Vec3(0, rot(), 0);
-        velVec.crossVectors(posVec,angMomVec).multiplyScalar(Math.random());
-        bodies.push(new Body(5E13, posVec, velVec, 8, getRandomTexture(), rotation));
+        velVec.crossVectors(posVec, angMomVec).multiplyScalar(Math.random());
+        bodies.push(new Body(5E13, posVec, velVec, 8, getRandomFromList(balls), rotation));
     }
 
     return bodies;

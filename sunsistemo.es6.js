@@ -6,11 +6,12 @@ let calc = require("./calc.es6.js");
 // let bodies = calc.bodies;
 let bodyTexture = true;
 let bodies = calc.genBodiesRot(400, bodyTexture);
-let sphereP = 16;
+let sphereP = 32;
 let [spheres] = init();
 
 
-animate_leapfrog();
+// animate_leapfrog();
+animate();
 
 
 function init() {
@@ -27,7 +28,10 @@ function init() {
     let spheres = [];
     for (let b of bodies) {
         let geometry = new THREE.SphereGeometry(b.rad, sphereP, sphereP);
-        let material = new THREE.MeshPhongMaterial({map:b.getTexture()});
+        let material = new THREE.MeshPhongMaterial();
+        material.map = b.getTexture();
+        material.bumpMap = b.getBumpMap();
+        material.bumpScale = 0.2;
         let sphere = new THREE.Mesh(geometry, material);
         sphere.position.set(b.r.x, b.r.y, b.r.z);
         scene.add(sphere);
