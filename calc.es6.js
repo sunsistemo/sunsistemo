@@ -10,7 +10,7 @@ let textures = ["sun", "earth", "jupiter", "mars", "mercury", "moon", "neptune",
 // let loadTexture = texture => THREE.ImageUtils.loadTexture("textures/" + texture);
 let allTextures = {};
 
-<<<<<<< HEAD
+
 // for (let t in textures) {
 //     allTextures[textures[t]] = loadTextures(textures[t])
 // }
@@ -28,12 +28,10 @@ allTextures = { "sun":     loadTextures("sun", true, false, false),
                 "pluto":   loadTextures("pluto", true, true,  false),
                 "tennisball": loadTextures("tennisball", true, true, true)
 };
-=======
 for (let t in textures) {
     allTextures[textures[t]] = loadTextures(textures[t]);
 }
 
->>>>>>> f438377ff6b90474dcef03809d46b6a76ff79f0f
 console.log(allTextures);
 
 class Body {
@@ -68,7 +66,6 @@ class Body {
     }
 }
 
-<<<<<<< HEAD
 function loadTextures(textureName, textOn, bumpOn, specOn){
     let fullTexture = {}
     if (textOn) {
@@ -87,7 +84,8 @@ function loadTextures(textureName, textOn, bumpOn, specOn){
     }
 
     return fullTexture
-=======
+}
+
 function loadTextures(textureName){
     let texture = THREE.ImageUtils.loadTexture("textures/" + textureName + "map.jpg" );
     texture.minFilter = THREE.LinearFilter;
@@ -98,7 +96,6 @@ function loadTextures(textureName){
     let specularMap = THREE.ImageUtils.loadTexture("textures/" + textureName + "specular.jpg");
 
     return {"texture": texture, "bumpMap": bumpMap, "specularMap": specularMap};
->>>>>>> f438377ff6b90474dcef03809d46b6a76ff79f0f
 }
 
 function getRandomFromList(list) {

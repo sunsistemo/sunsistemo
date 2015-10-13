@@ -4,14 +4,9 @@ let controls, stats;
 let calc = require("./calc.es6.js");
 
 let bodyTexture = true;
-<<<<<<< HEAD
-let bodies = calc.genBodiesRot(400, bodyTexture);
-let sphereP = 16;
-=======
 let system = calc.genBodiesRot(400, bodyTexture);
 let bodies = system.bodies;
 let sphereP = 32;
->>>>>>> f438377ff6b90474dcef03809d46b6a76ff79f0f
 let [spheres] = init();
 
 
