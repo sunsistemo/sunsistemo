@@ -1,1 +1,0 @@
-All planet textures were taken from http://planetpixelemporium.com/planets.html and are Copyright (c) by James Hastings-Trew.

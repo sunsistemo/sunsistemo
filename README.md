@@ -23,6 +23,18 @@ And it is slower on:
 1. [Click here](https://sunsistemo.js.org/)
 2. Done!
 
+## Credits
+
+Textures of the planets, moons and the sun were taken from
+<http://planetpixelemporium.com/planets.html> and are Copyright (c) by James
+Hastings-Trew.
+
+The galaxy_starfield is from the
+[learningthreejs website](http://learningthreejs.com/blog/2013/09/16/how-to-make-the-earth-in-webgl/).
+
+The various balls are from
+<http://www.robinwood.com/Catalog/FreeStuff/Textures/TexturePages/BallMaps.html>.
+
 ## License
 
 [GPL-3.0+](https://github.com/sunsistemo/sunsistemo/blob/master/LICENSE.txt)
