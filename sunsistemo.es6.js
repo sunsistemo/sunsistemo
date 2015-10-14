@@ -24,6 +24,15 @@ function init() {
     controls.damping = 0.1;
     controls.addEventListener('change', render);
 
+    // starfield skymap
+    let geometry  = new THREE.SphereGeometry(10000, 32, 32);
+    let material  = new THREE.MeshBasicMaterial({
+        map: THREE.ImageUtils.loadTexture("textures/galaxy_starfield.png"),
+        side: THREE.BackSide
+    });
+    let skymap  = new THREE.Mesh(geometry, material);
+    scene.add(skymap);
+
     // spheres
     let spheres = [];
     for (let b of bodies) {
