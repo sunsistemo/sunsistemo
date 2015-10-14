@@ -12,7 +12,7 @@ let allTextures = {};
 allTextures = { "sun":     loadTextures("sun", true, false, false),
                 "mercury": loadTextures("mercury", true, true,  false),
                 "venus":   loadTextures("venus", true, true,  false),
-                "earth":   loadTextures("earth", true, true,  false),
+                "earth":   loadTextures("earth", true, true, true),
                 "mars":    loadTextures("mars", true, true,  false),
                 "moon":    loadTextures("moon", true, true,  false),
                 "jupiter": loadTextures("jupiter", true, false, false),
