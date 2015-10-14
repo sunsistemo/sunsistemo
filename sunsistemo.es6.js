@@ -46,9 +46,22 @@ function init() {
         spheres.push(sphere);
     }
 
-    // sun
+    let sun = spheres[0];
+    sun.material.emissive.set(0xfcd440);
+
+    // sunlight
     let light = new THREE.PointLight(0xfcd440, 2, 2000);
-    spheres[0].add(light);
+    sun.add(light);
+
+    // sun glow
+    let spriteMaterial = new THREE.SpriteMaterial({
+        map: THREE.ImageUtils.loadTexture("textures/glow.png"),
+        color: 0xfc843f, transparent: false, blending: THREE.AdditiveBlending
+    });
+    let sprite = new THREE.Sprite(spriteMaterial);
+    let glowRadius = sun.geometry.boundingSphere.radius * 5;
+    sprite.scale.set(glowRadius, glowRadius, 1.0);
+    sun.add(sprite);
 
     // overall light
     let ambient = new THREE.AmbientLight(0x404040);

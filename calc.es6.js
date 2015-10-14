@@ -111,7 +111,7 @@ function genBodiesRot(n, bodyTexture) {
 
     let angMomVec = new Vec3(0,4,0);
 
-    bodies.push(new Body(1E18, new Vec3(0, 0, 0), new Vec3(0, 0, 0), 8, "sun",
+    bodies.push(new Body(1E18, new Vec3(0, 0, 0), new Vec3(0, 0, 0), 16, "sun",
                          new Vec3(0, 0.01, 0)));
     for (let i = 0; i < n; i++) {
         let posVec = new Vec3(getRandomInt(-300,300), getRandomInt(-300,300), getRandomInt(-300,300));

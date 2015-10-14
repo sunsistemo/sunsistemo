@@ -35,6 +35,10 @@ The galaxy_starfield is from the
 The various balls are from
 <http://www.robinwood.com/Catalog/FreeStuff/Textures/TexturePages/BallMaps.html>.
 
+The glow effect of the sun is from
+[Three.js Examples](https://stemkoski.github.io/Three.js/Simple-Glow.html) by
+Lee Stemkoski.
+
 ## License
 
 [GPL-3.0+](https://github.com/sunsistemo/sunsistemo/blob/master/LICENSE.txt)
