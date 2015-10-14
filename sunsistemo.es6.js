@@ -4,13 +4,14 @@ let controls, stats;
 let calc = require("./calc.es6.js");
 
 let bodyTexture = true;
-let system = calc.genBodiesRot(400, bodyTexture);
-let bodies = system.bodies;
+let numBodies = 100;
 let sphereP = 32;
+
+let system = calc.genBodiesRot(numBodies, bodyTexture);
+let bodies = system.bodies;
 let [spheres] = init();
 
-
-animate();
+animate_leapfrog();
 
 
 function init() {
@@ -97,6 +98,11 @@ function animate() {
         spheres[i].rotation.x += bodies[i].rot.x;
         spheres[i].rotation.y += bodies[i].rot.y;
         spheres[i].rotation.z += bodies[i].rot.z;
+        for (let j = 0; j < bodies.length; j++) {   
+            if ((i ==! j) && calc.touch(bodies[i],bodies[j])) {
+                calc.elasticCollision(bodies[i],bodies[j])
+            }
+        }
     }
 
     requestAnimationFrame(animate);

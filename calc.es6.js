@@ -209,12 +209,26 @@ function removeLostBodies(b, spheres, scene, range){
     return [b, spheres];
 }
 
+function touch(b1, b2) {
+    let distance = new Vec3(0,0,0);
+    distance.subVectors(b1.r, b2.r);
+    return (distance.length() <= (b1.rad + b2.rad))
+}
+
+function elasticCollision(b1, b2) {
+    let normal = new Vec3(0,0,0);
+    normal.subVectors(b1.r, b2.r);
+    console.log(b1.texture,b2.texture);
+}
+
 
 function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }                               // from: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
 
 module.exports = {
+    touch: touch,
+    elasticCollision: elasticCollision,
     removeLostBodies: removeLostBodies,
     getGravCenter: getGravCenter,
     genBodies: genBodies,
