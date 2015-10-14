@@ -21,8 +21,6 @@ function init() {
 
     // orbitcontrols
     controls = new THREE.OrbitControls(camera);
-    controls.damping = 0.1;
-    controls.addEventListener('change', render);
 
     // starfield skymap
     let geometry  = new THREE.SphereGeometry(10000, 32, 32);
@@ -73,7 +71,6 @@ function init() {
 
 function animate_leapfrog() {
     bodies = calc.leapfrog(bodies, system.stepsize);
-
     requestAnimationFrame(animate);
 }
 
@@ -91,6 +88,7 @@ function animate() {
 
     requestAnimationFrame(animate);
     render();
+    controls.update();
     stats.update();
 }
 
