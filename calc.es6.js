@@ -210,17 +210,17 @@ export function removeLostBodies(b, spheres, scene, range){
     return [b, spheres];
 }
 
-function touch(b1, b2) {
+export function touch(b1, b2) {
     let distance = new Vec3(0,0,0);
     distance.subVectors(b1.r, b2.r);
     return (distance.length() <= (b1.rad + b2.rad));
 }
 
-function elasticCollision(b1, b2) {
+export function elasticCollision(b1, b2) {
     // console.log("until here everything is fine")
 
-    let m1 = b1.m, m2 = b2.m, 
-    v1 = b1.v.clone(), v2 = b2.v.clone(), 
+    let m1 = b1.m, m2 = b2.m,
+    v1 = b1.v.clone(), v2 = b2.v.clone(),
     v12 = new Vec3(0,0,0), v21 = new Vec3(0,0,0),
     r1 = b1.r.clone(), r2 = b2.r.clone(),
     r12 = new Vec3(0,0,0), r21 = new Vec3(0,0,0),
@@ -239,9 +239,7 @@ function elasticCollision(b1, b2) {
 
     b1.v = v1new;
     b2.v = v2new;
-
 }
-
 
 export function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;

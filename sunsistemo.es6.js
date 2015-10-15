@@ -10,8 +10,16 @@ let numBodies = 300;
 let sphereP = 32;
 
 let system = calc.genBodiesRot(numBodies, bodyTexture);
+// let system = systems.genSolarSystem();
 let bodies = system.bodies;
 let [spheres] = init();
+
+var steps;
+if (system.hasOwnProperty("stepsPerFrame")) {
+    steps = system.stepsPerFrame;
+} else {
+    steps = 1;
+}
 
 animate_leapfrog();
 
@@ -26,7 +34,7 @@ function init() {
     controls = new THREE.OrbitControls(camera);
 
     // starfield skymap
-    let geometry  = new THREE.SphereGeometry(10000, 32, 32);
+    let geometry  = new THREE.SphereGeometry(100000, 32, 32);
     let material  = new THREE.MeshBasicMaterial({
         map: THREE.ImageUtils.loadTexture("textures/galaxy_starfield.png"),
         side: THREE.BackSide
@@ -91,18 +99,24 @@ function animate_leapfrog() {
 }
 
 function animate() {
-    bodies = calc.symplectic_euler(bodies, system.stepsize);
+    for (let i = 0; i < steps; i ++) {
+        bodies = calc.symplectic_euler(bodies, system.stepsize);
+    }
+
     [bodies, spheres] = calc.removeLostBodies(bodies, spheres, scene, 2000);
 
     for (let i = 0; i < bodies.length; i++) {
         let pos = bodies[i].r;
+        if (system.hasOwnProperty("scalePosition")) {
+            pos = system.scalePosition(pos);
+        }
         spheres[i].position.set(pos.x, pos.y, pos.z);
         spheres[i].rotation.x += bodies[i].rot.x;
         spheres[i].rotation.y += bodies[i].rot.y;
         spheres[i].rotation.z += bodies[i].rot.z;
-        
-        for (let j = i + 1; j < bodies.length; j++) { 
-            if ((i !== j) && (calc.touch(bodies[i],bodies[j]))) { 
+
+        for (let j = i + 1; j < bodies.length; j++) {
+            if ((i !== j) && (calc.touch(bodies[i],bodies[j]))) {
                 spheres[i].texture
                 calc.elasticCollision(bodies[i],bodies[j]);
             }

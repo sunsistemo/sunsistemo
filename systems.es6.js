@@ -94,12 +94,25 @@ export function genSolarSystem() {
         "pluto",
         new Vec3());
 
+    // let bodies = [sun, mercury, venus, earth, mars, jupiter, saturn, uranus,
+    //               neptune, pluto];
+    let bodies = [sun, mercury, venus, earth];
+
+    let scaleRadius = rad => Math.pow(rad, 1/5);
+
+    for (let b of bodies) {
+        b.rad = scaleRadius(b.rad);
+    }
+
     return {
-        bodies: [sun, mercury, venus, earth, mars, jupiter, saturn, uranus,
-                 neptune, pluto],
-        stepsize: 0.5 * (60 * 60 * 24),
-        scalePosition: vec => vec.multiplyScalar(1E-07),
-        cameraPosition: {x: 0, y: 0, z: 1000}
+        bodies: bodies,
+        // stepsize: 10000. * (60 * 60 * 24),
+        stepsize: 10,
+        stepsPerFrame: 1,
+        // scalePosition: vec => vec.multiplyScalar(1E-08),
+        scalePosition: vec => vec.setLength(Math.pow(vec.length(), 1/6)),
+        // scalePosition: vec => vec.setLength(Math.log(vec.length)/Math.log(1.4)),
+        camera: {x: 0, y: 0, z: 1300}
     };
 }
 
