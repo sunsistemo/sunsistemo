@@ -166,20 +166,22 @@ export function genSolarSystem() {
         // scalePosition: vec => vec.multiplyScalar(1E-08),
         scalePosition: vec => vec.setLength(Math.pow(vec.length(), 1/6)),
         // scalePosition: vec => vec.setLength(Math.log(vec.length)/Math.log(1.4)),
-        camera: {x: 0, y: 0, z: 1300}
+        camera: {x: 0, y: 0, z: 1300},
+        collisions: false
     };
 }
 
 export function gen3Bodies() {
-    let s1 = new Body(1E19, new Vec3(0, 0, 0), new Vec3(0, 2, 0), 8, "mercury");
-    let s2 = new Body(1E18, new Vec3(200, 0, 0), new Vec3(0, 900, 0), 8, "venus");
-    let s3 = new Body(1E18, new Vec3(-200, 0, 0), new Vec3(0, -900, 0), 8, "earth");
+    let s1 = new Body(1E19, new Vec3(0, 0, 0), new Vec3(0, 2, 0), 12, "sun", new Vec3(0, 0.01, 0));
+    let s2 = new Body(1E18, new Vec3(200, 0, 0), new Vec3(0, 900, 0), 8, "mars", new Vec3(0, 0.02, 0));
+    let s3 = new Body(1E18, new Vec3(-200, 0, 0), new Vec3(0, -900, 0), 8, "earth", new Vec3(0, 0.04, 0));
     let bodies = [s1, s2, s3];
 
     return {
         bodies: bodies,
         stepsize: 0.001,
-        camera: {x: 0, y: 0, z: 400}
+        camera: {x: 0, y: 0, z: 300},
+        collisions: false
     };
 }
 
@@ -200,7 +202,8 @@ export function genBodies(n, bodyTexture) {
     return {
         bodies: bodies,
         stepsize: 0.001,
-        camera: {x: 0, y: 0, z: 400}
+        camera: {x: 0, y: 0, z: 400},
+        collisions: true
     };
 }
 
@@ -224,7 +227,8 @@ export function genBodiesRot(n, bodyTexture) {
     return {
         bodies: bodies,
         stepsize: 0.001,
-        camera: {x: 0, y: 0, z: 400}
+        camera: {x: 0, y: 0, z: 400},
+        collisions: true
     };
 }
 

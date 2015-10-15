@@ -9,24 +9,23 @@ let bodyTexture = true;
 let numBodies = 100;
 let sphereP = 32;
 
-let system
-// let system = systems.genBodiesRot(numBodies, bodyTexture);
-let bodies;
+var steps;
+let system, bodies;
 let spheres;
 let sysDict = {
-    "Random Bodies": systems.genBodies , 
-    "Solar System": systems.genSolarSystem, 
+    "Random Bodies": systems.genBodies,
+    "Solar System": systems.genSolarSystem,
     "Total Angular Momentum": systems.genBodiesRot,
     "Three Bodies": systems.gen3Bodies
 };
-var steps;
 
-simulate("Random Bodies")
+// simulate("Random Bodies")
+simulate("Three Bodies");
 
 
 function simulate(sysID){
     let sysFunc = sysDict[sysID];
-    system = sysFunc(numBodies, bodyTexture)
+    system = sysFunc(numBodies, bodyTexture);
     bodies = system.bodies;
     if (system.hasOwnProperty("stepsPerFrame")) {
         steps = system.stepsPerFrame;
@@ -127,16 +126,17 @@ function animate() {
             pos = system.scalePosition(pos);
         }
         spheres[i].position.set(pos.x, pos.y, pos.z);
+
         spheres[i].rotation.x += bodies[i].rot.x;
         spheres[i].rotation.y += bodies[i].rot.y;
         spheres[i].rotation.z += bodies[i].rot.z;
 
-        for (let j = i + 1; j < bodies.length; j++) {
-            if ((i !== j) && (calc.touch(bodies[i],bodies[j]))) {
-                spheres[i].texture
-                calc.elasticCollision(bodies[i],bodies[j]);
-                // calc.mergeCollision(bodies, spheres, scene, bodies[i], bodies[j]);
-
+        if (system.collisions) {
+            for (let j = i + 1; j < bodies.length; j++) {
+                if ((i !== j) && (calc.touch(bodies[i],bodies[j]))) {
+                    calc.elasticCollision(bodies[i],bodies[j]);
+                    // calc.mergeCollision(bodies, spheres, scene, bodies[i], bodies[j]);
+                }
             }
         }
     }
