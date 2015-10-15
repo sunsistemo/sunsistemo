@@ -2,26 +2,42 @@ let scene, camera, light, renderer;
 let controls, stats;
 
 import Body from "./calc.es6.js";
-import * as calc from "./calc.es6.js";
 import * as systems from "./systems.es6.js";
+import * as calc from "./calc.es6.js";
 
 let bodyTexture = true;
-let numBodies = 300;
+let numBodies = 100;
 let sphereP = 32;
 
-let system = calc.genBodiesRot(numBodies, bodyTexture);
-// let system = systems.genSolarSystem();
-let bodies = system.bodies;
-let [spheres] = init();
-
+let system
+// let system = systems.genBodiesRot(numBodies, bodyTexture);
+let bodies;
+let spheres;
+let sysDict = {
+    "Random Bodies": systems.genBodies , 
+    "Solar System": systems.genSolarSystem, 
+    "Total Angular Momentum": systems.genBodiesRot,
+    "Three Bodies": systems.gen3Bodies
+};
 var steps;
-if (system.hasOwnProperty("stepsPerFrame")) {
-    steps = system.stepsPerFrame;
-} else {
-    steps = 1;
-}
 
-animate_leapfrog();
+simulate("Random Bodies")
+
+
+function simulate(sysID){
+    let sysFunc = sysDict[sysID];
+    system = sysFunc(numBodies, bodyTexture)
+    bodies = system.bodies;
+    if (system.hasOwnProperty("stepsPerFrame")) {
+        steps = system.stepsPerFrame;
+    } else {
+        steps = 1;
+    }
+    [spheres] = init();
+    animate_leapfrog();
+
+    window.addEventListener('resize', onWindowResize, true);
+}
 
 
 function init() {
@@ -49,7 +65,7 @@ function init() {
         let material = new THREE.MeshPhongMaterial();
         material.map = b.getTexture();
         material.bumpMap = b.getBumpMap();
-        material.bumpScale = 0.2;
+        material.bumpScale = 0.05;
         material.specularMap = b.getSpecularMap();
         let sphere = new THREE.Mesh(geometry, material);
         sphere.position.set(b.r.x, b.r.y, b.r.z);
@@ -119,6 +135,8 @@ function animate() {
             if ((i !== j) && (calc.touch(bodies[i],bodies[j]))) {
                 spheres[i].texture
                 calc.elasticCollision(bodies[i],bodies[j]);
+                // calc.mergeCollision(bodies, spheres, scene, bodies[i], bodies[j]);
+
             }
         }
     }
@@ -136,8 +154,6 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
     render();
 }
-window.addEventListener('resize', onWindowResize, true);
-
 
 function render() {
     renderer.render(scene, camera);

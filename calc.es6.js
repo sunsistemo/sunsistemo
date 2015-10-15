@@ -2,133 +2,9 @@
 let G = 6.67408E-11;
 
 let Vec3 = THREE.Vector3;
-let planets = ["earth", "jupiter", "mars", "mercury", "moon", "neptune",
-               "pluto", "saturn", "uranus", "venus"];
-let balls = ["tennisball", "softball"];
-let textures = ["sun", "earth", "jupiter", "mars", "mercury", "moon", "neptune",
-                "pluto", "saturn", "uranus", "venus", "clouds", "tennisball"];
-let allTextures = {};
+import Body from "./systems.es6.js"
 
-allTextures = { "sun":     loadTextures("sun", true, false, false),
-                "mercury": loadTextures("mercury", true, true,  false),
-                "venus":   loadTextures("venus", true, true,  false),
-                "earth":   loadTextures("earth", true, true, true),
-                "mars":    loadTextures("mars", true, true,  false),
-                "moon":    loadTextures("moon", true, true,  false),
-                "jupiter": loadTextures("jupiter", true, false, false),
-                "saturn":  loadTextures("saturn", true, false, false),
-                "uranus":  loadTextures("uranus", true, false, false),
-                "neptune": loadTextures("neptune", true, false, false),
-                "pluto":   loadTextures("pluto", true, true,  false),
-                "tennisball": loadTextures("tennisball", true, true, true),
-                "softball": loadTextures("softball", true, true, false)
-};
-
-
-class Body {
-    constructor(m, r, v, rad, texture, rot) {
-        this.m = m;
-        this.r = r;
-        this.v = v;
-        this.rad = rad;
-        this.texture = texture;
-        this.rot = rot;
-    }
-
-    getTexture() {
-        return allTextures[this.texture]["texture"];
-    }
-
-    getBumpMap() {
-        return allTextures[this.texture]["bumpMap"];
-    }
-    getSpecularMap() {
-        return allTextures[this.texture]["specularMap"];
-    }
-
-    set(r, v) {
-        this.r = r;
-        this.v = v;
-        return this;
-    }
-
-    clone() {
-        return new Body(this.m, this.r, this.v, this.rad, this.texture, this.rot);
-    }
-}
-
-export default Body
-
-function loadTextures(textureName, textOn, bumpOn, specOn){
-    let fullTexture = {};
-    if (textOn) {
-        let texture = THREE.ImageUtils.loadTexture("textures/" + textureName + "map.jpg" );
-        texture.minFilter = THREE.LinearFilter;
-        fullTexture.texture = texture;
-    }
-    if (bumpOn) {
-        let bumpMap = THREE.ImageUtils.loadTexture("textures/" + textureName + "bump.jpg");
-        bumpMap.minFilter = THREE.LinearFilter;
-        fullTexture.bumpMap = bumpMap;
-    }
-    if (specOn) {
-        let specularMap = THREE.ImageUtils.loadTexture("textures/" + textureName + "specular.jpg");
-        specularMap.minFilter = THREE.LinearFilter;
-        fullTexture.specularMap = specularMap;
-    }
-
-    return fullTexture;
-}
-
-function getRandomFromList(list) {
-
-    return list[getRandomInt(0, list.length)];
-}
-
-export function genBodies(n, bodyTexture) {
-
-    if (!bodyTexture){allTextures = [];}
-    let bodies = [];
-
-    for (let i = 0; i < n; i++) {
-        let posVec = new Vec3(getRandomInt(-300,300), getRandomInt(-300,300), getRandomInt(-300,300));
-        let velVec = new Vec3(getRandomInt(-500,500), getRandomInt(-500,500), getRandomInt(-500,500));
-        let rot = () => Math.random() / 30;
-        let rotation = new Vec3(0, rot(), 0);
-
-        bodies.push(new Body(1E16, posVec, velVec, 8, getRandomFromList(planets), rotation));
-        }
-
-    return {
-        bodies: bodies,
-        stepsize: 0.001,
-        camera: {x: 0, y: 0, z: 400}
-    };
-}
-
-export function genBodiesRot(n, bodyTexture) {
-    if (!bodyTexture){allTextures = [];}
-    let bodies = [];
-
-    let angMomVec = new Vec3(0,4,0);
-
-    bodies.push(new Body(1E18, new Vec3(0, 0, 0), new Vec3(0, 0, 0), 16, "sun",
-                         new Vec3(0, 0.01, 0)));
-    for (let i = 0; i < n; i++) {
-        let posVec = new Vec3(getRandomInt(-300,300), getRandomInt(-300,300), getRandomInt(-300,300));
-        let velVec = new Vec3(0,0,0);
-        let rot = () => Math.random() / 30;
-        let rotation = new Vec3(0, rot(), 0);
-        velVec.crossVectors(posVec, angMomVec).multiplyScalar(Math.random());
-        bodies.push(new Body(1E14, posVec, velVec, 8, getRandomFromList(planets), rotation));
-    }
-
-    return {
-        bodies: bodies,
-        stepsize: 0.001,
-        camera: {x: 0, y: 0, z: 400}
-    };
-}
+// console.log(allTextures);
 
 function accel(i, b) {
     // Compute acceleration due to gravity on body i by all other bodies
@@ -241,6 +117,27 @@ export function elasticCollision(b1, b2) {
     b2.v = v2new;
 }
 
-export function getRandomInt(min, max) {
-  return Math.floor(Math.random() * (max - min)) + min;
-}                               // from: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
+export function mergeCollision(bodies, spheres, scene, b1, b2) {
+    let bBig, bSmall;
+    if (b1.m > b2.m) {
+        bBig = b1, bSmall = b2;
+        console.log("merge!");
+
+    }
+
+    else {
+        bBig = b2, bSmall = b1;
+        console.log("merge!");
+
+    }
+    // console.log(bBig.m)
+    bBig.m += bSmall.m;
+    bBig.rad += 2;
+
+    bodies.splice(bodies.indexOf(bSmall),1);
+    scene.remove(spheres[bodies.indexOf(bSmall)]);
+    spheres.splice(bodies.indexOf(bSmall),1);
+    console.log("merge!");
+}
+
+
