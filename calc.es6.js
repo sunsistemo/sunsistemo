@@ -57,6 +57,8 @@ class Body {
     }
 }
 
+export default Body
+
 function loadTextures(textureName, textOn, bumpOn, specOn){
     let fullTexture = {};
     if (textOn) {
@@ -83,7 +85,7 @@ function getRandomFromList(list) {
     return list[getRandomInt(0, list.length)];
 }
 
-function genBodies(n, bodyTexture) {
+export function genBodies(n, bodyTexture) {
 
     if (!bodyTexture){allTextures = [];}
     let bodies = [];
@@ -105,7 +107,7 @@ function genBodies(n, bodyTexture) {
     };
 }
 
-function genBodiesRot(n, bodyTexture) {
+export function genBodiesRot(n, bodyTexture) {
     if (!bodyTexture){allTextures = [];}
     let bodies = [];
 
@@ -146,7 +148,7 @@ function accel(i, b) {
     return a;
 }
 
-function euler(b, h) {
+export function euler(b, h) {
     // b is a list of Body objects
     let bodies = [];
     for (let i = 0; i < b.length; i++) {
@@ -158,7 +160,7 @@ function euler(b, h) {
     return bodies;
 }
 
-function symplectic_euler(b, h) {
+export function symplectic_euler(b, h) {
     // b is a list of Body objects
     let bodies = [];
     for (let i = 0; i < b.length; i++) {
@@ -171,7 +173,7 @@ function symplectic_euler(b, h) {
 }
 
 
-function leapfrog(b, h) {
+export function leapfrog(b, h) {
     let bodies = [];
     for (let i = 0; i < b.length; i++) {
         let r = b[i].r.clone().add(b[i].v.clone().multiplyScalar(h));
@@ -182,7 +184,7 @@ function leapfrog(b, h) {
     return bodies;
 }
 
-function getGravCenter(b) {
+export function getGravCenter(b) {
     let gravCenter = new Vec3(0,0,0);
     let totMass = 0;
     for (let i = 0; i < b.length; i++) {
@@ -193,7 +195,7 @@ function getGravCenter(b) {
     return gravCenter.divideScalar(totMass);
 }
 
-function removeLostBodies(b, spheres, scene, range){
+export function removeLostBodies(b, spheres, scene, range){
     let gravCent = getGravCenter(b);
     for (let i = 0; i < b.length; i++) {
         let pos = b[i].r.clone();
@@ -212,7 +214,7 @@ function removeLostBodies(b, spheres, scene, range){
 function touch(b1, b2) {
     let distance = new Vec3(0,0,0);
     distance.subVectors(b1.r, b2.r);
-    return (distance.length() <= (b1.rad + b2.rad))
+    return (distance.length() <= (b1.rad + b2.rad));
 }
 
 function elasticCollision(b1, b2) {
@@ -222,17 +224,6 @@ function elasticCollision(b1, b2) {
 }
 
 
-function getRandomInt(min, max) {
+export function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }                               // from: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
-
-module.exports = {
-    touch: touch,
-    elasticCollision: elasticCollision,
-    removeLostBodies: removeLostBodies,
-    getGravCenter: getGravCenter,
-    genBodies: genBodies,
-    genBodiesRot: genBodiesRot,
-    symplectic_euler: symplectic_euler,
-    leapfrog: leapfrog
-};

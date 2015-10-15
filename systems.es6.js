@@ -1,9 +1,9 @@
-let calc = require("./calc.es6.js");
-let Body = calc.Body;
+import Body from "./calc.es6.js";
+import * as calc from "./calc.es6.js";
 let Vec3 = THREE.Vector3;
 
 
-function genSolarSystem() {
+export function genSolarSystem() {
     // Initial conditions of the solar system at 00:00:00 1 January 1970
 
     let sun = new Body(
@@ -103,7 +103,7 @@ function genSolarSystem() {
     };
 }
 
-function gen3Bodies() {
+export function gen3Bodies() {
     let s1 = new Body(1E19, new Vec3(0, 0, 0), new Vec3(0, 2, 0), 8, "mercury");
     let s2 = new Body(1E18, new Vec3(200, 0, 0), new Vec3(0, 900, 0), 8, "venus");
     let s3 = new Body(1E18, new Vec3(-200, 0, 0), new Vec3(0, -900, 0), 8, "earth");
@@ -115,8 +115,3 @@ function gen3Bodies() {
         camera: {x: 0, y: 0, z: 400}
     };
 }
-
-module.exports = {
-    genSolarSystem: genSolarSystem,
-    gen3Bodies: gen3Bodies
-};

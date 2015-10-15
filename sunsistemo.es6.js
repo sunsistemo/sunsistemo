@@ -1,7 +1,9 @@
 let scene, camera, light, renderer;
 let controls, stats;
 
-let calc = require("./calc.es6.js");
+import Body from "./calc.es6.js";
+import * as calc from "./calc.es6.js";
+import * as systems from "./systems.es6.js";
 
 let bodyTexture = true;
 let numBodies = 100;
@@ -98,9 +100,9 @@ function animate() {
         spheres[i].rotation.x += bodies[i].rot.x;
         spheres[i].rotation.y += bodies[i].rot.y;
         spheres[i].rotation.z += bodies[i].rot.z;
-        for (let j = 0; j < bodies.length; j++) {   
+        for (let j = 0; j < bodies.length; j++) {
             if ((i ==! j) && calc.touch(bodies[i],bodies[j])) {
-                calc.elasticCollision(bodies[i],bodies[j])
+                calc.elasticCollision(bodies[i],bodies[j]);
             }
         }
     }
