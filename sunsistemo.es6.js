@@ -6,7 +6,7 @@ import * as calc from "./calc.es6.js";
 import * as systems from "./systems.es6.js";
 
 let bodyTexture = true;
-let numBodies = 100;
+let numBodies = 300;
 let sphereP = 32;
 
 let system = calc.genBodiesRot(numBodies, bodyTexture);
@@ -100,8 +100,10 @@ function animate() {
         spheres[i].rotation.x += bodies[i].rot.x;
         spheres[i].rotation.y += bodies[i].rot.y;
         spheres[i].rotation.z += bodies[i].rot.z;
-        for (let j = 0; j < bodies.length; j++) {
-            if ((i ==! j) && calc.touch(bodies[i],bodies[j])) {
+        
+        for (let j = i + 1; j < bodies.length; j++) { 
+            if ((i !== j) && (calc.touch(bodies[i],bodies[j]))) { 
+                spheres[i].texture
                 calc.elasticCollision(bodies[i],bodies[j]);
             }
         }

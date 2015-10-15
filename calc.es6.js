@@ -90,15 +90,14 @@ export function genBodies(n, bodyTexture) {
     if (!bodyTexture){allTextures = [];}
     let bodies = [];
 
-    bodies.push(new Body(1E18, new Vec3(0, 0, 0), new Vec3(0, 0, 0)));
     for (let i = 0; i < n; i++) {
-        bodies.push(new Body(
-            5E16,
-            new Vec3(getRandomInt(-300,300), getRandomInt(-300,300), getRandomInt(-300,300)),
-            new Vec3(getRandomInt(-900,900), getRandomInt(-900,900), getRandomInt(-900,900)),
-            getRandomFromList(planets)
-        ));
-    }
+        let posVec = new Vec3(getRandomInt(-300,300), getRandomInt(-300,300), getRandomInt(-300,300));
+        let velVec = new Vec3(getRandomInt(-500,500), getRandomInt(-500,500), getRandomInt(-500,500));
+        let rot = () => Math.random() / 30;
+        let rotation = new Vec3(0, rot(), 0);
+
+        bodies.push(new Body(1E16, posVec, velVec, 8, getRandomFromList(planets), rotation));
+        }
 
     return {
         bodies: bodies,
@@ -121,7 +120,7 @@ export function genBodiesRot(n, bodyTexture) {
         let rot = () => Math.random() / 30;
         let rotation = new Vec3(0, rot(), 0);
         velVec.crossVectors(posVec, angMomVec).multiplyScalar(Math.random());
-        bodies.push(new Body(5E13, posVec, velVec, 8, getRandomFromList(balls), rotation));
+        bodies.push(new Body(1E14, posVec, velVec, 8, getRandomFromList(planets), rotation));
     }
 
     return {
@@ -218,9 +217,29 @@ function touch(b1, b2) {
 }
 
 function elasticCollision(b1, b2) {
-    let normal = new Vec3(0,0,0);
-    normal.subVectors(b1.r, b2.r);
-    console.log(b1.texture,b2.texture);
+    // console.log("until here everything is fine")
+
+    let m1 = b1.m, m2 = b2.m, 
+    v1 = b1.v.clone(), v2 = b2.v.clone(), 
+    v12 = new Vec3(0,0,0), v21 = new Vec3(0,0,0),
+    r1 = b1.r.clone(), r2 = b2.r.clone(),
+    r12 = new Vec3(0,0,0), r21 = new Vec3(0,0,0),
+    v1new = new Vec3(0,0,0), v2new = new Vec3(0,0,0);
+
+    v12.subVectors(v1, v2);
+    v21.subVectors(v2, v1);
+    r12.subVectors(r1, r2);
+    r21.subVectors(r2, r1);
+    // console.log("old", v1.length(),v2.length())
+
+
+    v1new.subVectors(v1, r12.multiplyScalar( (v12.dot(r12)/r12.lengthSq()) * (2 * m2 / (m1 + m2)) ) );
+    v2new.subVectors(v2, r21.multiplyScalar( (v21.dot(r21)/r21.lengthSq()) * (2 * m1 / (m1 + m2)) ) );
+    // console.log("new", v1new.length(),v2new.length())
+
+    b1.v = v1new;
+    b2.v = v2new;
+
 }
 
 
