@@ -29,7 +29,9 @@ let menuList = [
     {"label":"Random Bodies", "function": systems.genBodies, "args": [200, true, false]},
     {"label":"Angular Momentum", "function": systems.genBodiesRot, "args": [200, "planets", true, false]},
     {"label":"Angular with Bounce", "function": systems.genBodiesRot, "args": [200,"balls", true, true, true]},
-    {"label":"Butterfly", "function": systems.genButterFlyOne, "args": []}
+    {"label":"Butterfly", "function": systems.genButterFlyOne, "args": []},
+    {"label":"Yin Yang", "function": systems.genYinYang, "args": []},
+    {"label":"Goggles", "function": systems.genYinYang, "args": []}
     // {"label":"Solar System", "function": systems.genSolarSystem, "args": [true] }
 
 ];
@@ -174,10 +176,10 @@ function init() {
         // overall light
         let ambient = new THREE.AmbientLight(0xf0f0f0);
         scene.add(ambient);
-        
+
     }
 
-    
+
 
     renderer = new THREE.WebGLRenderer();
     renderer.setClearColor(0x000000);

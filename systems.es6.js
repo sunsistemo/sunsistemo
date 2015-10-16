@@ -3,7 +3,7 @@ let Vec3 = THREE.Vector3;
 
 let textureSets = {
     planets: ["earth", "jupiter", "mars", "mercury", "moon", "neptune",
-               "pluto", "saturn", "uranus", "venus"], 
+               "pluto", "saturn", "uranus", "venus"],
     balls: ["tennisball", "softball"],
     all: ["sun", "earth", "jupiter", "mars", "mercury", "moon", "neptune",
                 "pluto", "saturn", "uranus", "venus", "clouds", "tennisball"]
@@ -178,6 +178,7 @@ export function genSolarSystem(sunOn) {
         sphereP: 32
     };
 }
+
 export function gen2Bodies(sunOn) {
     let rot = () => Math.random() / 30;
     let s1 = new Body(1E19, new Vec3(0, 0, 0), new Vec3(0, -90, 0), 12, "sun", new Vec3(0, 0, rot()));
@@ -268,7 +269,38 @@ export function genBodiesRot(n, bodyTexture, sunOn, collisions) {
     };
 }
 
-export function genButterFlyOne() {
+export function genGoggles() {  // I.B.5 goggles
+    let m = 1 / 6.67408E-11;
+    let s1 = new Body(m, new Vec3(-1, 0, 0), new Vec3(0.08330, 0.12789, 0), 0.05, "jupiter", new Vec3(0, 0.01, 0));
+    let s2 = new Body(m, new Vec3(-s1.r.x, 0, 0), new Vec3(s1.v.x, s1.v.y, 0), 0.05, "tennisball", new Vec3(0, 0.01, 0));
+    let s3 = new Body(m, new Vec3(0, 0, 0), new Vec3(-2 * s1.v.x, -2 * s1.v.y), 0.05, "earth", new Vec3(0, 0.03, 0));
+
+    return {
+        bodies: [s1, s2, s3],
+        stepsize: 0.00001,
+        stepsPerFrame: 500,
+        camera: {x: 0, y: 0, z: 2},
+        collisions: false
+    };
+}
+
+export function genYinYang() {  // II.C.2a yin-yang I
+    let m = 1 / 6.67408E-11;
+    let s1 = new Body(m, new Vec3(-1, 0, 0), new Vec3(0.51394, 0.30474, 0), 0.05, "jupiter", new Vec3(0, 0.01, 0));
+    let s2 = new Body(m, new Vec3(-s1.r.x, 0, 0), new Vec3(s1.v.x, s1.v.y, 0), 0.05, "tennisball", new Vec3(0, 0.01, 0));
+    let s3 = new Body(m, new Vec3(0, 0, 0), new Vec3(-2 * s1.v.x, -2 * s1.v.y), 0.05, "earth", new Vec3(0, 0.03, 0));
+
+    return {
+        bodies: [s1, s2, s3],
+        stepsize: 0.00001,
+        stepsPerFrame: 500,
+        camera: {x: 0, y: 0, z: 2},
+        collisions: false
+    };
+}
+
+
+export function genButterFlyOne() {  // I.A.1 butterfly I
     let m = 1 / 6.67408E-11;
     let s1 = new Body(m, new Vec3(-1, 0, 0), new Vec3(0.30689, 0.12551, 0), 0.05, "tennisball", new Vec3(0, 0.01, 0));
     let s2 = new Body(m, new Vec3(-s1.r.x, 0, 0), new Vec3(s1.v.x, s1.v.y, 0), 0.05, "softball", new Vec3(0, 0.01, 0));
