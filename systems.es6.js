@@ -1,11 +1,16 @@
 import * as calc from "./calc.es6.js";
 let Vec3 = THREE.Vector3;
 
-let planets = ["earth", "jupiter", "mars", "mercury", "moon", "neptune",
-               "pluto", "saturn", "uranus", "venus"];
-let balls = ["tennisball", "softball"];
-let textures = ["sun", "earth", "jupiter", "mars", "mercury", "moon", "neptune",
-                "pluto", "saturn", "uranus", "venus", "clouds", "tennisball"];
+let textureSets = {
+    planets: ["earth", "jupiter", "mars", "mercury", "moon", "neptune",
+               "pluto", "saturn", "uranus", "venus"], 
+    balls: ["tennisball", "softball"],
+    all: ["sun", "earth", "jupiter", "mars", "mercury", "moon", "neptune",
+                "pluto", "saturn", "uranus", "venus", "clouds", "tennisball"]
+    }
+
+// let textures = ["sun", "earth", "jupiter", "mars", "mercury", "moon", "neptune",
+//                 "pluto", "saturn", "uranus", "venus", "clouds", "tennisball"];
 // let allTextures = {};
 
 class Body {
@@ -220,7 +225,7 @@ export function genBodies(n, bodyTexture, sunOn, collisions) {
         let rot = () => Math.random() / 30;
         let rotation = new Vec3(0, rot(), 0);
 
-        bodies.push(new Body(1E16, posVec, velVec, 8, getRandomFromList(planets), rotation));
+        bodies.push(new Body(1E16, posVec, velVec, 8, getRandomFromList(textureSets.planets), rotation));
         }
 
     return {
@@ -235,7 +240,7 @@ export function genBodies(n, bodyTexture, sunOn, collisions) {
 }
 
 export function genBodiesRot(n, bodyTexture, sunOn, collisions) {
-    if (!bodyTexture){allTextures = [];}
+    let textureSet = textureSets[bodyTexture];
     let bodies = [];
 
     let angMomVec = new Vec3(0,4,0);
@@ -248,7 +253,7 @@ export function genBodiesRot(n, bodyTexture, sunOn, collisions) {
         let rot = () => Math.random() / 30;
         let rotation = new Vec3(0, rot(), 0);
         velVec.crossVectors(posVec, angMomVec).multiplyScalar(Math.random() + .1);
-        bodies.push(new Body(1E14, posVec, velVec, 8, getRandomFromList(planets), rotation));
+        bodies.push(new Body(1E14, posVec, velVec, 8, getRandomFromList(textureSet), rotation));
     }
 
     return {

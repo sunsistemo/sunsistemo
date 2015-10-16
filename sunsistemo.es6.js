@@ -27,8 +27,8 @@ let menuList = [
     {"label":"Two Bodies", "function": systems.gen2Bodies, "args": [true]},
     {"label":"Three Bodies", "function": systems.gen3Bodies, "args": [true]},
     {"label":"Random Bodies", "function": systems.genBodies, "args": [200, true, false]},
-    {"label":"Angular Momentum", "function": systems.genBodiesRot, "args": [200, true, true, false]},
-    {"label":"Angular with Bounce", "function": systems.genBodiesRot, "args": [200, true, true, true]},
+    {"label":"Angular Momentum", "function": systems.genBodiesRot, "args": [200, "planets", true, false]},
+    {"label":"Angular with Bounce", "function": systems.genBodiesRot, "args": [200,"balls", true, true, true]},
     {"label":"Butterfly", "function": systems.genButterFlyOne, "args": []}
     // {"label":"Solar System", "function": systems.genSolarSystem, "args": [true] }
 
