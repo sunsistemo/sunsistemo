@@ -180,14 +180,15 @@ export function genSolarSystem(sunOn) {
 }
 export function gen2Bodies(sunOn) {
     let rot = () => Math.random() / 30;
-    let s1 = new Body(1E19, new Vec3(0, 0, 0), new Vec3(0, -90, 0), 8, "sun", new Vec3(0, 0, rot()));
+    let s1 = new Body(1E19, new Vec3(0, 0, 0), new Vec3(0, -90, 0), 12, "sun", new Vec3(0, 0, rot()));
     let s2 = new Body(1E18, new Vec3(200, 0, 0), new Vec3(0, 900, 0), 8, "earth", new Vec3(0, 0, rot()));
     let bodies = [s1, s2];
 
     return {
         bodies: bodies,
-        stepsize: 0.0003,
-        camera: {x: 0, y: 0, z: 400},
+        stepsize: 0.000003,
+        stepsPerFrame: 100,
+        camera: {x: 0, y: 0, z: 250},
         collisions: false,
         sunOn: sunOn,
         sphereP: 32
@@ -197,7 +198,7 @@ export function gen2Bodies(sunOn) {
 
 export function gen3Bodies(sunOn) {
     let rot = () => Math.random() / 30;
-    let s1 = new Body(1E19, new Vec3(0, 0, 0), new Vec3(0, 2, 0), 8, "mercury", new Vec3(0, 0, rot()));
+    let s1 = new Body(1E19, new Vec3(0, 0, 0), new Vec3(0, 2, 0), 12, "sun", new Vec3(0, 0, rot()));
     let s2 = new Body(1E18, new Vec3(200, 0, 0), new Vec3(0, 900, 0), 8, "venus", new Vec3(0, 0, rot()));
     let s3 = new Body(1E18, new Vec3(-200, 0, 0), new Vec3(0, -900, 0), 8, "earth", new Vec3(0, 0, rot()));
     let bodies = [s1, s2, s3];
@@ -206,7 +207,7 @@ export function gen3Bodies(sunOn) {
         bodies: bodies,
         stepsize: 0.000003,
         stepsPerFrame: 100,
-        camera: {x: 0, y: 0, z: 400},
+        camera: {x: 0, y: 0, z: 250},
         collisions: false,
         sunOn: sunOn,
         sphereP: 32
@@ -245,7 +246,7 @@ export function genBodiesRot(n, bodyTexture, sunOn, collisions) {
 
     let angMomVec = new Vec3(0,4,0);
 
-    bodies.push(new Body(1E18, new Vec3(0, 0, 0), new Vec3(0, 0, 0), 16, "sun",
+    bodies.push(new Body(1E18, new Vec3(0, 0, 0), new Vec3(0, 0, 0), 12, "sun",
                          new Vec3(0, 0.01, 0)));
     for (let i = 0; i < n; i++) {
         let posVec = new Vec3(getRandomInt(-300,300), getRandomInt(-300,300), getRandomInt(-300,300));
