@@ -270,8 +270,8 @@ export function genButterFlyOne() {
 
     return {
         bodies: [s1, s2, s3],
-        stepsize: 0.000001,
-        stepsPerFrame: 10000,
+        stepsize: 0.00001,
+        stepsPerFrame: 500,
         camera: {x: 0, y: 0, z: 2},
         collisions: false
     };
