@@ -7,7 +7,7 @@ import * as calc from "./calc.es6.js";
 
 let bodyTexture = true;
 let numBodies = 1;
-let sphereP = 32;
+let sphereP = 16;
 let sunOn;
 
 var steps;
@@ -27,22 +27,23 @@ let menuList = [
     {"label":"Two Bodies", "function": systems.gen2Bodies, "args": [true]},
     {"label":"Three Bodies", "function": systems.gen3Bodies, "args": [true]},
     {"label":"Random Bodies", "function": systems.genBodies, "args": [200, true, false]}, 
-    {"label":"Angular Momentum", "function": systems.genBodiesRot, "args": [200, true, true]},
+    {"label":"Angular Momentum", "function": systems.genBodiesRot, "args": [200, true, true, false]},
+    {"label":"Angular with Bounce", "function": systems.genBodiesRot, "args": [200, true, true, true]},
     {"label":"Solar System", "function": systems.genSolarSystem, "args": [true] }
 
 ];
-var steps;
 gui(menuList);
 
 simulate(menuList[0].function, [0, true, false]);
 
 function gui(buttonList) {
     let buttonHeight = 50
+    let buttonWidth = 200
     let body = d3.select("body")
     let menuDiv = body.selectAll("#gui")
     menuDiv.style()
     let menuSvg = menuDiv.append("svg")
-    .attr("width", 200 + "px")
+    .attr("width", buttonWidth + 50 + "px")
     .attr("height", buttonHeight * menuList.length + 20 + "px")
     .attr("class", "menuSvg");
 
@@ -60,7 +61,7 @@ function gui(buttonList) {
     buttons.append("rect")
         .style("fill", "#aaa")
         .style("opacity",".5")
-        .attr("width", (150))
+        .attr("width", (buttonWidth))
         .attr("height", buttonHeight - 3)
         .attr("rx", 5)
         .attr("ry", 5);
@@ -95,6 +96,8 @@ function gui(buttonList) {
 function clearSimulation() {
     let simDiv = document.getElementById("sim");
     while (simDiv.firstChild) simDiv.removeChild(simDiv.firstChild);
+    let statDiv = d3.select("#stat").remove();
+
    } 
 function simulate(sysFunc, args){
     system = sysFunc(...args);
@@ -132,7 +135,7 @@ function init() {
     // spheres
     let spheres = [];
     for (let b of bodies) {
-        let geometry = new THREE.SphereGeometry(b.rad, sphereP, sphereP);
+        let geometry = new THREE.SphereGeometry(b.rad, system.sphereP, sphereP);
         let material = new THREE.MeshPhongMaterial();
         material.map = b.getTexture();
         material.bumpMap = b.getBumpMap();
@@ -162,6 +165,11 @@ function init() {
         sprite.scale.set(glowRadius, glowRadius, 1.0);
         sun.add(sprite);
     }
+    else {
+        // sunlight
+        let light = new THREE.HemisphereLight(0xfcd440, 2);
+        
+    }
 
     // overall light
     let ambient = new THREE.AmbientLight(0x404040);
@@ -174,7 +182,7 @@ function init() {
     // stats
     stats = new Stats();
     stats.domElement.style.position = 'absolute';
-    stats.domElement.style.left = '0px';
+    stats.domElement.style.right = '0px';
     stats.domElement.style.top = '0px';
     document.body.appendChild(stats.domElement);
 

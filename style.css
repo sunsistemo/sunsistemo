@@ -38,3 +38,7 @@ text{
   font-family: "Trebuchet MS", Helvetica, sans-serif ;
   
 }
+#stats{
+  right: 0;
+  z-index: 10;
+}

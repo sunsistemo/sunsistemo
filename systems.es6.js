@@ -164,12 +164,13 @@ export function genSolarSystem(sunOn) {
         // stepsize: 10000. * (60 * 60 * 24),
         stepsize: 10,
         stepsPerFrame: 1,
-        // scalePosition: vec => vec.multiplyScalar(1E-08),
-        scalePosition: vec => vec.setLength(Math.pow(vec.length(), 1/6)),
+        scalePosition: vec => vec.multiplyScalar(1E-08),
+        // scalePosition: vec => vec.setLength(Math.pow(vec.length(), 1/6)),
         // scalePosition: vec => vec.setLength(Math.log(vec.length)/Math.log(1.4)),
         camera: {x: 0, y: 0, z: 1300},
         collisions: false,
-        sunOn: sunOn
+        sunOn: sunOn,
+        sphereP: 32
     };
 }
 export function gen2Bodies(sunOn) {
@@ -180,30 +181,34 @@ export function gen2Bodies(sunOn) {
 
     return {
         bodies: bodies,
-        stepsize: 0.001,
+        stepsize: 0.0003,
         camera: {x: 0, y: 0, z: 400},
         collisions: false,
-        sunOn: sunOn
+        sunOn: sunOn,
+        sphereP: 32
+
     };
 }
 
 export function gen3Bodies(sunOn) {
     let rot = () => Math.random() / 30;
-    let s1 = new Body(1E19, new Vec3(0, 0, 0), new Vec3(0, 2, 0), 8, "mercury", new Vec3(0, 0, rot()));
+    let s1 = new Body(1E19, new Vec3(0, 0, 0), new Vec3(0, 0, 0), 8, "mercury", new Vec3(0, 0, rot()));
     let s2 = new Body(1E18, new Vec3(200, 0, 0), new Vec3(0, 900, 0), 8, "venus", new Vec3(0, 0, rot()));
     let s3 = new Body(1E18, new Vec3(-200, 0, 0), new Vec3(0, -900, 0), 8, "earth", new Vec3(0, 0, rot()));
     let bodies = [s1, s2, s3];
 
     return {
         bodies: bodies,
-        stepsize: 0.0005,
+        stepsize: 0.0003,
         camera: {x: 0, y: 0, z: 400},
         collisions: false,
-        sunOn: sunOn
+        sunOn: sunOn,
+        sphereP: 32
+
     };
 }
 
-export function genBodies(n, bodyTexture, sunOn) {
+export function genBodies(n, bodyTexture, sunOn, collisions) {
 
     if (!bodyTexture){allTextures = [];}
     let bodies = [];
@@ -221,12 +226,14 @@ export function genBodies(n, bodyTexture, sunOn) {
         bodies: bodies,
         stepsize: 0.001,
         camera: {x: 0, y: 0, z: 400},
-        collisions: true,
-        sunOn: sunOn
+        collisions: collisions,
+        sunOn: sunOn,
+        sphereP: 16
+
     };
 }
 
-export function genBodiesRot(n, bodyTexture, sunOn) {
+export function genBodiesRot(n, bodyTexture, sunOn, collisions) {
     if (!bodyTexture){allTextures = [];}
     let bodies = [];
 
@@ -239,16 +246,18 @@ export function genBodiesRot(n, bodyTexture, sunOn) {
         let velVec = new Vec3(0,0,0);
         let rot = () => Math.random() / 30;
         let rotation = new Vec3(0, rot(), 0);
-        velVec.crossVectors(posVec, angMomVec).multiplyScalar(Math.random());
+        velVec.crossVectors(posVec, angMomVec).multiplyScalar(Math.random() + .1);
         bodies.push(new Body(1E14, posVec, velVec, 8, getRandomFromList(planets), rotation));
     }
 
     return {
         bodies: bodies,
-        stepsize: 0.001,
+        stepsize: 0.0005,
         camera: {x: 0, y: 0, z: 400},
-        collisions: true,
-        sunOn: sunOn
+        collisions: collisions,
+        sunOn: sunOn,
+        sphereP: 16
+
     };
 }
 
