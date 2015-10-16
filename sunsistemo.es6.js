@@ -7,7 +7,7 @@ import * as calc from "./calc.es6.js";
 
 let bodyTexture = true;
 let numBodies = 1;
-let sphereP = 16;
+let sphereP = 12;
 let sunOn;
 
 var steps;
@@ -29,8 +29,8 @@ let menuList = [
     {"label":"Random Bodies", "function": systems.genBodies, "args": [200, true, false]},
     {"label":"Angular Momentum", "function": systems.genBodiesRot, "args": [200, true, true, false]},
     {"label":"Angular with Bounce", "function": systems.genBodiesRot, "args": [200, true, true, true]},
-    {"label":"Butterfly", "function": systems.genButterFlyOne, "args": []},
-    {"label":"Solar System", "function": systems.genSolarSystem, "args": [true] }
+    {"label":"Butterfly", "function": systems.genButterFlyOne, "args": []}
+    // {"label":"Solar System", "function": systems.genSolarSystem, "args": [true] }
 
 ];
 gui(menuList);
@@ -60,7 +60,7 @@ function gui(buttonList) {
         .attr("class", "button");
 
     buttons.append("rect")
-        .style("fill", "#aaa")
+        // .style("fill", "#aaa")
         .style("opacity",".5")
         .attr("width", (buttonWidth))
         .attr("height", buttonHeight - 3)
@@ -97,7 +97,7 @@ function gui(buttonList) {
 function clearSimulation() {
     let simDiv = document.getElementById("sim");
     while (simDiv.firstChild) simDiv.removeChild(simDiv.firstChild);
-    let statDiv = d3.select("#stat").remove();
+    let statDiv = d3.select("#stats").remove();
 
    }
 function simulate(sysFunc, args){
@@ -165,16 +165,19 @@ function init() {
         let glowRadius = sun.geometry.boundingSphere.radius * 5;
         sprite.scale.set(glowRadius, glowRadius, 1.0);
         sun.add(sprite);
+
+        // overall light
+        let ambient = new THREE.AmbientLight(0x404040);
+        scene.add(ambient);
     }
     else {
-        // sunlight
-        let light = new THREE.HemisphereLight(0xfcd440, 2);
-
+        // overall light
+        let ambient = new THREE.AmbientLight(0xf0f0f0);
+        scene.add(ambient);
+        
     }
 
-    // overall light
-    let ambient = new THREE.AmbientLight(0x404040);
-    scene.add(ambient);
+    
 
     renderer = new THREE.WebGLRenderer();
     renderer.setClearColor(0x000000);

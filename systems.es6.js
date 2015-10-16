@@ -192,14 +192,15 @@ export function gen2Bodies(sunOn) {
 
 export function gen3Bodies(sunOn) {
     let rot = () => Math.random() / 30;
-    let s1 = new Body(1E19, new Vec3(0, 0, 0), new Vec3(0, 0, 0), 8, "mercury", new Vec3(0, 0, rot()));
+    let s1 = new Body(1E19, new Vec3(0, 0, 0), new Vec3(0, 2, 0), 8, "mercury", new Vec3(0, 0, rot()));
     let s2 = new Body(1E18, new Vec3(200, 0, 0), new Vec3(0, 900, 0), 8, "venus", new Vec3(0, 0, rot()));
     let s3 = new Body(1E18, new Vec3(-200, 0, 0), new Vec3(0, -900, 0), 8, "earth", new Vec3(0, 0, rot()));
     let bodies = [s1, s2, s3];
 
     return {
         bodies: bodies,
-        stepsize: 0.0003,
+        stepsize: 0.000003,
+        stepsPerFrame: 100,
         camera: {x: 0, y: 0, z: 400},
         collisions: false,
         sunOn: sunOn,
@@ -228,7 +229,7 @@ export function genBodies(n, bodyTexture, sunOn, collisions) {
         camera: {x: 0, y: 0, z: 400},
         collisions: collisions,
         sunOn: sunOn,
-        sphereP: 16
+        sphereP: 12
 
     };
 }
@@ -256,7 +257,7 @@ export function genBodiesRot(n, bodyTexture, sunOn, collisions) {
         camera: {x: 0, y: 0, z: 400},
         collisions: collisions,
         sunOn: sunOn,
-        sphereP: 16
+        sphereP: 12
 
     };
 }
