@@ -261,6 +261,21 @@ export function genBodiesRot(n, bodyTexture, sunOn, collisions) {
     };
 }
 
+export function genButterFlyOne() {
+    let m = 1 / 6.67408E-11;
+    let s1 = new Body(m, new Vec3(-1, 0, 0), new Vec3(0.30689, 0.12551, 0), 0.05, "tennisball", new Vec3(0, 0.01, 0));
+    let s2 = new Body(m, new Vec3(-s1.r.x, 0, 0), new Vec3(s1.v.x, s1.v.y, 0), 0.05, "softball", new Vec3(0, 0.01, 0));
+    let s3 = new Body(m, new Vec3(0, 0, 0), new Vec3(-2 * s1.v.x, -2 * s1.v.y), 0.05, "earth", new Vec3(0, 0.03, 0));
+
+    return {
+        bodies: [s1, s2, s3],
+        stepsize: 0.000001,
+        stepsPerFrame: 10000,
+        camera: {x: 0, y: 0, z: 2},
+        collisions: false
+    };
+}
+
 
 function loadTextures(textureName, textOn, bumpOn, specOn){
     let fullTexture = {};

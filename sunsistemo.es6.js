@@ -15,20 +15,21 @@ let system, bodies;
 let spheres;
 
 // let sysDict = {
-//     "Random Bodies": systems.genBodies , 
-//     "Solar System": systems.genSolarSystem, 
+//     "Random Bodies": systems.genBodies ,
+//     "Solar System": systems.genSolarSystem,
 //     "Total Angular Momentum": systems.genBodiesRot,
 //     "Three Bodies": systems.gen3Bodies
 // };
 
-let menuList = [    
+let menuList = [
     {"label":"Empty", "function": systems.genBodies, "args": [0, true, false]},
     {"label":"Only Sun", "function": systems.genBodiesRot, "args": [0, true, true]},
     {"label":"Two Bodies", "function": systems.gen2Bodies, "args": [true]},
     {"label":"Three Bodies", "function": systems.gen3Bodies, "args": [true]},
-    {"label":"Random Bodies", "function": systems.genBodies, "args": [200, true, false]}, 
+    {"label":"Random Bodies", "function": systems.genBodies, "args": [200, true, false]},
     {"label":"Angular Momentum", "function": systems.genBodiesRot, "args": [200, true, true, false]},
     {"label":"Angular with Bounce", "function": systems.genBodiesRot, "args": [200, true, true, true]},
+    {"label":"Butterfly", "function": systems.genButterFlyOne, "args": []},
     {"label":"Solar System", "function": systems.genSolarSystem, "args": [true] }
 
 ];
@@ -65,7 +66,7 @@ function gui(buttonList) {
         .attr("height", buttonHeight - 3)
         .attr("rx", 5)
         .attr("ry", 5);
-    
+
     buttons.append("text")
         .style("fill", "black")
         .attr("dx", ".35em")
@@ -90,7 +91,7 @@ function gui(buttonList) {
                 d3.select(d3.event.target.parentNode)
                     .classed("selected", true);
             })
-    
+
     }
 
 function clearSimulation() {
@@ -98,14 +99,14 @@ function clearSimulation() {
     while (simDiv.firstChild) simDiv.removeChild(simDiv.firstChild);
     let statDiv = d3.select("#stat").remove();
 
-   } 
+   }
 function simulate(sysFunc, args){
     system = sysFunc(...args);
     console.log(system)
     bodies = system.bodies;
     if (system.hasOwnProperty("stepsPerFrame")) {
         steps = system.stepsPerFrame;
-    } 
+    }
     else { steps = 1; }
     [spheres] = init();
     animate_leapfrog();
@@ -168,7 +169,7 @@ function init() {
     else {
         // sunlight
         let light = new THREE.HemisphereLight(0xfcd440, 2);
-        
+
     }
 
     // overall light
