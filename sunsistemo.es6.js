@@ -1,37 +1,109 @@
 let scene, camera, light, renderer;
 let controls, stats;
 
-import Body from "./calc.es6.js";
+import Body from "./systems.es6.js";
 import * as systems from "./systems.es6.js";
 import * as calc from "./calc.es6.js";
 
 let bodyTexture = true;
-let numBodies = 100;
+let numBodies = 1;
 let sphereP = 32;
+let sunOn;
 
 var steps;
 let system, bodies;
 let spheres;
-let sysDict = {
-    "Random Bodies": systems.genBodies,
-    "Solar System": systems.genSolarSystem,
-    "Total Angular Momentum": systems.genBodiesRot,
-    "Three Bodies": systems.gen3Bodies
-};
 
-// simulate("Random Bodies")
-simulate("Three Bodies");
+// let sysDict = {
+//     "Random Bodies": systems.genBodies , 
+//     "Solar System": systems.genSolarSystem, 
+//     "Total Angular Momentum": systems.genBodiesRot,
+//     "Three Bodies": systems.gen3Bodies
+// };
 
+let menuList = [    
+    {"label":"Empty", "function": systems.genBodies, "args": [0, true, false]},
+    {"label":"Only Sun", "function": systems.genBodiesRot, "args": [0, true, true]},
+    {"label":"Two Bodies", "function": systems.gen2Bodies, "args": [true]},
+    {"label":"Three Bodies", "function": systems.gen3Bodies, "args": [true]},
+    {"label":"Random Bodies", "function": systems.genBodies, "args": [200, true, false]}, 
+    {"label":"Angular Momentum", "function": systems.genBodiesRot, "args": [200, true, true]},
+    {"label":"Solar System", "function": systems.genSolarSystem, "args": [true] }
 
-function simulate(sysID){
-    let sysFunc = sysDict[sysID];
-    system = sysFunc(numBodies, bodyTexture);
+];
+var steps;
+gui(menuList);
+
+simulate(menuList[0].function, [0, true, false]);
+
+function gui(buttonList) {
+    let buttonHeight = 50
+    let body = d3.select("body")
+    let menuDiv = body.selectAll("#gui")
+    menuDiv.style()
+    let menuSvg = menuDiv.append("svg")
+    .attr("width", 200 + "px")
+    .attr("height", buttonHeight * menuList.length + 20 + "px")
+    .attr("class", "menuSvg");
+
+    var buttons = menuSvg.selectAll(".button")
+        .data(menuList)
+    // console.log(dict)
+
+    buttons.enter()
+        .append("g")
+        .attr("transform", function(d,i){
+                return ("translate(" + 10 + "," + ((i * buttonHeight) + 10) + ")")
+            })
+        .attr("class", "button");
+
+    buttons.append("rect")
+        .style("fill", "#aaa")
+        .style("opacity",".5")
+        .attr("width", (150))
+        .attr("height", buttonHeight - 3)
+        .attr("rx", 5)
+        .attr("ry", 5);
+    
+    buttons.append("text")
+        .style("fill", "black")
+        .attr("dx", ".35em")
+        .attr("y", buttonHeight / 2)
+        .attr("dy", ".35em")
+        .text(function(d){return d.label});
+
+    buttons.on("mouseover", function(d){
+                d3.select(d3.event.target.parentNode)
+                    .classed("highlight", true);
+            })
+        .on("mouseout", function(d){
+                d3.select(d3.event.target.parentNode)
+                    .classed("highlight", false);
+            })
+
+        .on("click", function(d){
+                d3.selectAll(".selected")
+                    .classed("selected", false)
+                clearSimulation()
+                simulate(d.function, d.args)
+                d3.select(d3.event.target.parentNode)
+                    .classed("selected", true);
+            })
+    
+    }
+
+function clearSimulation() {
+    let simDiv = document.getElementById("sim");
+    while (simDiv.firstChild) simDiv.removeChild(simDiv.firstChild);
+   } 
+function simulate(sysFunc, args){
+    system = sysFunc(...args);
+    console.log(system)
     bodies = system.bodies;
     if (system.hasOwnProperty("stepsPerFrame")) {
         steps = system.stepsPerFrame;
-    } else {
-        steps = 1;
-    }
+    } 
+    else { steps = 1; }
     [spheres] = init();
     animate_leapfrog();
 
@@ -64,7 +136,7 @@ function init() {
         let material = new THREE.MeshPhongMaterial();
         material.map = b.getTexture();
         material.bumpMap = b.getBumpMap();
-        material.bumpScale = 0.05;
+        material.bumpScale = 0.1;
         material.specularMap = b.getSpecularMap();
         let sphere = new THREE.Mesh(geometry, material);
         sphere.position.set(b.r.x, b.r.y, b.r.z);
@@ -72,22 +144,24 @@ function init() {
         spheres.push(sphere);
     }
 
-    let sun = spheres[0];
-    sun.material.emissive.set(0xfcd440);
+    if (system.sunOn){
+        let sun = spheres[0];
+        sun.material.emissive.set(0xfcd440);
 
-    // sunlight
-    let light = new THREE.PointLight(0xfcd440, 2, 2000);
-    sun.add(light);
+        // sunlight
+        let light = new THREE.PointLight(0xfcd440, 2, 2000);
+        sun.add(light);
 
-    // sun glow
-    let spriteMaterial = new THREE.SpriteMaterial({
-        map: THREE.ImageUtils.loadTexture("textures/glow.png"),
-        color: 0xfc843f, transparent: false, blending: THREE.AdditiveBlending
-    });
-    let sprite = new THREE.Sprite(spriteMaterial);
-    let glowRadius = sun.geometry.boundingSphere.radius * 5;
-    sprite.scale.set(glowRadius, glowRadius, 1.0);
-    sun.add(sprite);
+        // sun glow
+        let spriteMaterial = new THREE.SpriteMaterial({
+            map: THREE.ImageUtils.loadTexture("textures/glow.png"),
+            color: 0xfc843f, transparent: false, blending: THREE.AdditiveBlending
+        });
+        let sprite = new THREE.Sprite(spriteMaterial);
+        let glowRadius = sun.geometry.boundingSphere.radius * 5;
+        sprite.scale.set(glowRadius, glowRadius, 1.0);
+        sun.add(sprite);
+    }
 
     // overall light
     let ambient = new THREE.AmbientLight(0x404040);
@@ -96,8 +170,7 @@ function init() {
     renderer = new THREE.WebGLRenderer();
     renderer.setClearColor(0x000000);
     renderer.setSize(window.innerWidth, window.innerHeight);
-    document.body.appendChild(renderer.domElement);
-
+    document.getElementById("sim").appendChild(renderer.domElement);
     // stats
     stats = new Stats();
     stats.domElement.style.position = 'absolute';

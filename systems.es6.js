@@ -57,7 +57,7 @@ let allTextures = { "sun":     loadTextures("sun", true, false, false),
                 "softball": loadTextures("softball", true, true, false)
 };
 
-export function genSolarSystem() {
+export function genSolarSystem(sunOn) {
     // Initial conditions of the solar system at 00:00:00 1 January 1970
 
     let sun = new Body(
@@ -158,6 +158,7 @@ export function genSolarSystem() {
         b.rad = scaleRadius(b.rad);
     }
 
+
     return {
         bodies: bodies,
         // stepsize: 10000. * (60 * 60 * 24),
@@ -167,25 +168,42 @@ export function genSolarSystem() {
         scalePosition: vec => vec.setLength(Math.pow(vec.length(), 1/6)),
         // scalePosition: vec => vec.setLength(Math.log(vec.length)/Math.log(1.4)),
         camera: {x: 0, y: 0, z: 1300},
-        collisions: false
+        collisions: false,
+        sunOn: sunOn
     };
 }
-
-export function gen3Bodies() {
-    let s1 = new Body(1E19, new Vec3(0, 0, 0), new Vec3(0, 2, 0), 12, "sun", new Vec3(0, 0.01, 0));
-    let s2 = new Body(1E18, new Vec3(200, 0, 0), new Vec3(0, 900, 0), 8, "mars", new Vec3(0, 0.02, 0));
-    let s3 = new Body(1E18, new Vec3(-200, 0, 0), new Vec3(0, -900, 0), 8, "earth", new Vec3(0, 0.04, 0));
-    let bodies = [s1, s2, s3];
+export function gen2Bodies(sunOn) {
+    let rot = () => Math.random() / 30;
+    let s1 = new Body(1E19, new Vec3(0, 0, 0), new Vec3(0, -90, 0), 8, "sun", new Vec3(0, 0, rot()));
+    let s2 = new Body(1E18, new Vec3(200, 0, 0), new Vec3(0, 900, 0), 8, "earth", new Vec3(0, 0, rot()));
+    let bodies = [s1, s2];
 
     return {
         bodies: bodies,
         stepsize: 0.001,
-        camera: {x: 0, y: 0, z: 300},
-        collisions: false
+        camera: {x: 0, y: 0, z: 400},
+        collisions: false,
+        sunOn: sunOn
     };
 }
 
-export function genBodies(n, bodyTexture) {
+export function gen3Bodies(sunOn) {
+    let rot = () => Math.random() / 30;
+    let s1 = new Body(1E19, new Vec3(0, 0, 0), new Vec3(0, 2, 0), 8, "mercury", new Vec3(0, 0, rot()));
+    let s2 = new Body(1E18, new Vec3(200, 0, 0), new Vec3(0, 900, 0), 8, "venus", new Vec3(0, 0, rot()));
+    let s3 = new Body(1E18, new Vec3(-200, 0, 0), new Vec3(0, -900, 0), 8, "earth", new Vec3(0, 0, rot()));
+    let bodies = [s1, s2, s3];
+
+    return {
+        bodies: bodies,
+        stepsize: 0.0005,
+        camera: {x: 0, y: 0, z: 400},
+        collisions: false,
+        sunOn: sunOn
+    };
+}
+
+export function genBodies(n, bodyTexture, sunOn) {
 
     if (!bodyTexture){allTextures = [];}
     let bodies = [];
@@ -203,11 +221,12 @@ export function genBodies(n, bodyTexture) {
         bodies: bodies,
         stepsize: 0.001,
         camera: {x: 0, y: 0, z: 400},
-        collisions: true
+        collisions: true,
+        sunOn: sunOn
     };
 }
 
-export function genBodiesRot(n, bodyTexture) {
+export function genBodiesRot(n, bodyTexture, sunOn) {
     if (!bodyTexture){allTextures = [];}
     let bodies = [];
 
@@ -228,7 +247,8 @@ export function genBodiesRot(n, bodyTexture) {
         bodies: bodies,
         stepsize: 0.001,
         camera: {x: 0, y: 0, z: 400},
-        collisions: true
+        collisions: true,
+        sunOn: sunOn
     };
 }
 

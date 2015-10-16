@@ -1,0 +1,40 @@
+html, body {
+     margin: 0px;
+     padding: 0px;
+     overflow: hidden;
+ }
+#gui{
+  background-color: rgba(220,220,220,.8);
+  position: fixed;
+  display: block;
+  z-index: 5;
+ }
+#sim{
+  background-color: rgba(220,220,220,.2);
+  position: relative;
+  right: 0;
+  display: block;
+  z-index: 1
+ }
+ .button{
+  fill: #aaa;
+  opacity: .95;
+  cursor:pointer;
+}
+.button > text{
+  fill: #000;
+  opacity: 1;
+} 
+.highlight{
+  fill: rgba(196,119,73,1);
+  opacity: .95;
+}
+.selected{
+  fill: #400;
+  opacity: .95;
+  cursor:pointer;
+}
+text{
+  font-family: "Trebuchet MS", Helvetica, sans-serif ;
+  
+}
