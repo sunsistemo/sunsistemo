@@ -1,4 +1,4 @@
-import * as calc from "./calc.es6.js";
+import * as calc from "./calc.js";
 let Vec3 = THREE.Vector3;
 
 let textureSets = {
@@ -267,7 +267,7 @@ export function genBodiesRot(n, bodyTexture, sunOn, collisions) {
     };
 }
 
-function ThreeBodyPlanarPeriodicOrbit (x1d, y1d) {
+function ThreeBodyPlanarPeriodicOrbit(x1d, y1d) {
 
     let f = () => {
         let m = 1 / calc.G;
@@ -287,9 +287,20 @@ function ThreeBodyPlanarPeriodicOrbit (x1d, y1d) {
     return f;
 }
 
-export let genGoggles = ThreeBodyPlanarPeriodicOrbit(0.08330, 0.12789); // I.B.5 goggles
-export let genYinYang = ThreeBodyPlanarPeriodicOrbit(0.51394, 0.30474); // II.C.2a yin-yang I
-export let genButterFlyOne = ThreeBodyPlanarPeriodicOrbit(0.30689, 0.12551); // I.A.1 butterfly I
+// systems from http://arxiv.org/abs/1303.0181
+export let genButterFly1 = ThreeBodyPlanarPeriodicOrbit(0.30689, 0.12551);
+export let genButterFly2 = ThreeBodyPlanarPeriodicOrbit(0.39295, 0.09758);
+export let genBumblebee = ThreeBodyPlanarPeriodicOrbit(0.18428, 0.58719);
+export let genMoth1 = ThreeBodyPlanarPeriodicOrbit(0.46444, 0.39606);
+export let genMoth2 = ThreeBodyPlanarPeriodicOrbit(0.43917, 0.45297);
+export let genButterfly3 = ThreeBodyPlanarPeriodicOrbit(0.40592, 0.23016);
+export let genMoth3 = ThreeBodyPlanarPeriodicOrbit(0.38344, 0.37736);
+export let genGoggles = ThreeBodyPlanarPeriodicOrbit(0.08330, 0.12789);
+export let genButterfly4 = ThreeBodyPlanarPeriodicOrbit(0.350112, 0.07934);
+export let genDragonfly = ThreeBodyPlanarPeriodicOrbit(0.08058, 0.58884);
+export let genYarn = ThreeBodyPlanarPeriodicOrbit(0.55906, 0.34919);
+export let genYinYang1 = ThreeBodyPlanarPeriodicOrbit(0.51394, 0.30474);
+export let genYinYang2 = ThreeBodyPlanarPeriodicOrbit(0.41682, 0.33033);
 
 
 function loadTextures(textureName, textOn, bumpOn, specOn){

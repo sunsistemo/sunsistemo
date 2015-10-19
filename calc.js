@@ -1,8 +1,7 @@
-// physical constants from http://physics.nist.gov/cuu/Constants/index.html
-export const G = 6.67408E-11;
-
 let Vec3 = THREE.Vector3;
-import Body from "./systems.es6.js";
+import Body from "./systems.js";
+
+export const G = 6.67408E-11;
 
 
 function accel(i, b) {

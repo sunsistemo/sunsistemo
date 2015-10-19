@@ -36,6 +36,8 @@ Hastings-Trew.
 * The glow effect of the sun is from
 [Three.js Examples](https://stemkoski.github.io/Three.js/Simple-Glow.html) by
 Lee Stemkoski.
+* The initial conditions for the three-body planar periodic orbits are from
+[arXiv:1303.0181 **[physics.class-ph]**](http://arxiv.org/abs/1303.0181).
 
 # License
 

@@ -1,9 +1,9 @@
 let scene, camera, light, renderer;
 let controls, stats;
 
-import Body from "./systems.es6.js";
-import * as systems from "./systems.es6.js";
-import * as calc from "./calc.es6.js";
+import Body from "./systems.js";
+import * as systems from "./systems.js";
+import * as calc from "./calc.js";
 
 let bodyTexture = true;
 let numBodies = 1;
@@ -21,9 +21,10 @@ let menuList = [
     {"label":"Random Bodies", "function": systems.genBodies, "args": [200, true, false]},
     {"label":"Angular Momentum", "function": systems.genBodiesRot, "args": [200, "planets", true, false]},
     {"label":"Angular with Bounce", "function": systems.genBodiesRot, "args": [200,"balls", true, true, true]},
-    {"label":"Butterfly", "function": systems.genButterFlyOne, "args": []},
-    {"label":"Yin Yang", "function": systems.genYinYang, "args": []},
-    {"label":"Goggles", "function": systems.genYinYang, "args": []}
+    {"label":"Butterfly 1", "function": systems.genButterFly1, "args": []},
+    {"label":"Yin Yang 1", "function": systems.genYinYang1, "args": []},
+    {"label":"Goggles", "function": systems.genGoggles, "args": []},
+    {"label":"Yarn", "function": systems.genYarn, "args": []}
     // {"label":"Solar System", "function": systems.genSolarSystem, "args": [true] }
 ];
 gui(menuList);
