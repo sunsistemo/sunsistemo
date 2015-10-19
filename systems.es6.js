@@ -3,15 +3,15 @@ let Vec3 = THREE.Vector3;
 
 let textureSets = {
     planets: ["earth", "jupiter", "mars", "mercury", "moon", "neptune",
-               "pluto", "saturn", "uranus", "venus"],
+              "pluto", "saturn", "uranus", "venus"],
     balls: ["tennisball", "softball"],
     all: ["sun", "earth", "jupiter", "mars", "mercury", "moon", "neptune",
-                "pluto", "saturn", "uranus", "venus", "clouds", "tennisball"]
-    }
+          "pluto", "saturn", "uranus", "venus", "tennisball"]
+};
 
-// let textures = ["sun", "earth", "jupiter", "mars", "mercury", "moon", "neptune",
-//                 "pluto", "saturn", "uranus", "venus", "clouds", "tennisball"];
-// let allTextures = {};
+function getRandomTexture() {
+    return getRandomFromList(textureSets.all);
+}
 
 class Body {
     constructor(m, r, v, rad, texture, rot) {
@@ -61,6 +61,8 @@ let allTextures = { "sun":     loadTextures("sun", true, false, false),
                 "tennisball": loadTextures("tennisball", true, true, true),
                 "softball": loadTextures("softball", true, true, false)
 };
+
+let randomRot = () => Math.random() / 30;
 
 export function genSolarSystem(sunOn) {
     // Initial conditions of the solar system at 00:00:00 1 January 1970
@@ -180,9 +182,8 @@ export function genSolarSystem(sunOn) {
 }
 
 export function gen2Bodies(sunOn) {
-    let rot = () => Math.random() / 30;
-    let s1 = new Body(1E19, new Vec3(0, 0, 0), new Vec3(0, -90, 0), 12, "sun", new Vec3(0, 0, rot()));
-    let s2 = new Body(1E18, new Vec3(200, 0, 0), new Vec3(0, 900, 0), 8, "earth", new Vec3(0, 0, rot()));
+    let s1 = new Body(1E19, new Vec3(0, 0, 0), new Vec3(0, -90, 0), 12, "sun", new Vec3(0, 0, randomRot()));
+    let s2 = new Body(1E18, new Vec3(200, 0, 0), new Vec3(0, 900, 0), 8, "earth", new Vec3(0, 0, randomRot()));
     let bodies = [s1, s2];
 
     return {
@@ -198,10 +199,9 @@ export function gen2Bodies(sunOn) {
 }
 
 export function gen3Bodies(sunOn) {
-    let rot = () => Math.random() / 30;
-    let s1 = new Body(1E19, new Vec3(0, 0, 0), new Vec3(0, 2, 0), 12, "sun", new Vec3(0, 0, rot()));
-    let s2 = new Body(1E18, new Vec3(200, 0, 0), new Vec3(0, 900, 0), 8, "venus", new Vec3(0, 0, rot()));
-    let s3 = new Body(1E18, new Vec3(-200, 0, 0), new Vec3(0, -900, 0), 8, "earth", new Vec3(0, 0, rot()));
+    let s1 = new Body(1E19, new Vec3(0, 0, 0), new Vec3(0, 2, 0), 12, "sun", new Vec3(0, 0, randomRot()));
+    let s2 = new Body(1E18, new Vec3(200, 0, 0), new Vec3(0, 900, 0), 8, "venus", new Vec3(0, 0, randomRot()));
+    let s3 = new Body(1E18, new Vec3(-200, 0, 0), new Vec3(0, -900, 0), 8, "earth", new Vec3(0, 0, randomRot()));
     let bodies = [s1, s2, s3];
 
     return {
@@ -224,11 +224,10 @@ export function genBodies(n, bodyTexture, sunOn, collisions) {
     for (let i = 0; i < n; i++) {
         let posVec = new Vec3(getRandomInt(-300,300), getRandomInt(-300,300), getRandomInt(-300,300));
         let velVec = new Vec3(getRandomInt(-500,500), getRandomInt(-500,500), getRandomInt(-500,500));
-        let rot = () => Math.random() / 30;
-        let rotation = new Vec3(0, rot(), 0);
+        let rotation = new Vec3(0, randomRot(), 0);
 
         bodies.push(new Body(1E16, posVec, velVec, 8, getRandomFromList(textureSets.planets), rotation));
-        }
+    }
 
     return {
         bodies: bodies,
@@ -252,8 +251,7 @@ export function genBodiesRot(n, bodyTexture, sunOn, collisions) {
     for (let i = 0; i < n; i++) {
         let posVec = new Vec3(getRandomInt(-300,300), getRandomInt(-300,300), getRandomInt(-300,300));
         let velVec = new Vec3(0,0,0);
-        let rot = () => Math.random() / 30;
-        let rotation = new Vec3(0, rot(), 0);
+        let rotation = new Vec3(0, randomRot(), 0);
         velVec.crossVectors(posVec, angMomVec).multiplyScalar(Math.random() + .1);
         bodies.push(new Body(1E14, posVec, velVec, 8, getRandomFromList(textureSet), rotation));
     }
@@ -269,51 +267,29 @@ export function genBodiesRot(n, bodyTexture, sunOn, collisions) {
     };
 }
 
-export function genGoggles() {  // I.B.5 goggles
-    let m = 1 / 6.67408E-11;
-    let s1 = new Body(m, new Vec3(-1, 0, 0), new Vec3(0.08330, 0.12789, 0), 0.05, "jupiter", new Vec3(0, 0.01, 0));
-    let s2 = new Body(m, new Vec3(-s1.r.x, 0, 0), new Vec3(s1.v.x, s1.v.y, 0), 0.05, "tennisball", new Vec3(0, 0.01, 0));
-    let s3 = new Body(m, new Vec3(0, 0, 0), new Vec3(-2 * s1.v.x, -2 * s1.v.y), 0.05, "earth", new Vec3(0, 0.03, 0));
+function ThreeBodyPlanarPeriodicOrbit (x1d, y1d) {
 
-    return {
-        bodies: [s1, s2, s3],
-        stepsize: 0.00001,
-        stepsPerFrame: 500,
-        camera: {x: 0, y: 0, z: 2},
-        collisions: false
+    let f = () => {
+        let m = 1 / calc.G;
+        let s1 = new Body(m, new Vec3(-1, 0, 0), new Vec3(x1d, y1d, 0), 0.05, getRandomTexture(), new Vec3(0, randomRot(), 0));
+        let s2 = new Body(m, new Vec3(-s1.r.x, 0, 0), new Vec3(s1.v.x, s1.v.y, 0), 0.05, getRandomTexture(), new Vec3(0, randomRot(), 0));
+        let s3 = new Body(m, new Vec3(0, 0, 0), new Vec3(-2 * s1.v.x, -2 * s1.v.y), 0.05, getRandomTexture(), new Vec3(0, randomRot(), 0));
+
+        return {
+            bodies: [s1, s2, s3],
+            stepsize: 0.00001,
+            stepsPerFrame: 500,
+            camera: {x: 0, y: 0, z: 2},
+            collisions: false
+        };
     };
+
+    return f;
 }
 
-export function genYinYang() {  // II.C.2a yin-yang I
-    let m = 1 / 6.67408E-11;
-    let s1 = new Body(m, new Vec3(-1, 0, 0), new Vec3(0.51394, 0.30474, 0), 0.05, "jupiter", new Vec3(0, 0.01, 0));
-    let s2 = new Body(m, new Vec3(-s1.r.x, 0, 0), new Vec3(s1.v.x, s1.v.y, 0), 0.05, "tennisball", new Vec3(0, 0.01, 0));
-    let s3 = new Body(m, new Vec3(0, 0, 0), new Vec3(-2 * s1.v.x, -2 * s1.v.y), 0.05, "earth", new Vec3(0, 0.03, 0));
-
-    return {
-        bodies: [s1, s2, s3],
-        stepsize: 0.00001,
-        stepsPerFrame: 500,
-        camera: {x: 0, y: 0, z: 2},
-        collisions: false
-    };
-}
-
-
-export function genButterFlyOne() {  // I.A.1 butterfly I
-    let m = 1 / 6.67408E-11;
-    let s1 = new Body(m, new Vec3(-1, 0, 0), new Vec3(0.30689, 0.12551, 0), 0.05, "tennisball", new Vec3(0, 0.01, 0));
-    let s2 = new Body(m, new Vec3(-s1.r.x, 0, 0), new Vec3(s1.v.x, s1.v.y, 0), 0.05, "softball", new Vec3(0, 0.01, 0));
-    let s3 = new Body(m, new Vec3(0, 0, 0), new Vec3(-2 * s1.v.x, -2 * s1.v.y), 0.05, "earth", new Vec3(0, 0.03, 0));
-
-    return {
-        bodies: [s1, s2, s3],
-        stepsize: 0.00001,
-        stepsPerFrame: 500,
-        camera: {x: 0, y: 0, z: 2},
-        collisions: false
-    };
-}
+export let genGoggles = ThreeBodyPlanarPeriodicOrbit(0.08330, 0.12789); // I.B.5 goggles
+export let genYinYang = ThreeBodyPlanarPeriodicOrbit(0.51394, 0.30474); // II.C.2a yin-yang I
+export let genButterFlyOne = ThreeBodyPlanarPeriodicOrbit(0.30689, 0.12551); // I.A.1 butterfly I
 
 
 function loadTextures(textureName, textOn, bumpOn, specOn){
@@ -339,7 +315,6 @@ function loadTextures(textureName, textOn, bumpOn, specOn){
 
 
 function getRandomFromList(list) {
-
     return list[getRandomInt(0, list.length)];
 }
 

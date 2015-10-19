@@ -1,10 +1,9 @@
 // physical constants from http://physics.nist.gov/cuu/Constants/index.html
-let G = 6.67408E-11;
+export const G = 6.67408E-11;
 
 let Vec3 = THREE.Vector3;
-import Body from "./systems.es6.js"
+import Body from "./systems.es6.js";
 
-// console.log(allTextures);
 
 function accel(i, b) {
     // Compute acceleration due to gravity on body i by all other bodies
@@ -139,5 +138,3 @@ export function mergeCollision(bodies, spheres, scene, b1, b2) {
     spheres.splice(bodies.indexOf(bSmall),1);
     console.log("merge!");
 }
-
-

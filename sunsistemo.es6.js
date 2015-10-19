@@ -11,15 +11,7 @@ let sphereP = 12;
 let sunOn;
 
 var steps;
-let system, bodies;
-let spheres;
-
-// let sysDict = {
-//     "Random Bodies": systems.genBodies ,
-//     "Solar System": systems.genSolarSystem,
-//     "Total Angular Momentum": systems.genBodiesRot,
-//     "Three Bodies": systems.gen3Bodies
-// };
+let system, bodies, spheres;
 
 let menuList = [
     {"label":"Empty", "function": systems.genBodies, "args": [0, true, false]},
@@ -33,32 +25,30 @@ let menuList = [
     {"label":"Yin Yang", "function": systems.genYinYang, "args": []},
     {"label":"Goggles", "function": systems.genYinYang, "args": []}
     // {"label":"Solar System", "function": systems.genSolarSystem, "args": [true] }
-
 ];
 gui(menuList);
 
 simulate(menuList[0].function, [0, true, false]);
 
 function gui(buttonList) {
-    let buttonHeight = 50
-    let buttonWidth = 200
-    let body = d3.select("body")
-    let menuDiv = body.selectAll("#gui")
-    menuDiv.style()
+    let buttonHeight = 50;
+    let buttonWidth = 200;
+    let body = d3.select("body");
+    let menuDiv = body.selectAll("#gui");
+    menuDiv.style();
     let menuSvg = menuDiv.append("svg")
     .attr("width", buttonWidth + 50 + "px")
     .attr("height", buttonHeight * menuList.length + 20 + "px")
     .attr("class", "menuSvg");
 
     var buttons = menuSvg.selectAll(".button")
-        .data(menuList)
-    // console.log(dict)
+            .data(menuList);
 
     buttons.enter()
         .append("g")
-        .attr("transform", function(d,i){
-                return ("translate(" + 10 + "," + ((i * buttonHeight) + 10) + ")")
-            })
+        .attr("transform", function(d, i) {
+            return ("translate(" + 10 + "," + ((i * buttonHeight) + 10) + ")");
+        })
         .attr("class", "button");
 
     buttons.append("rect")
@@ -74,25 +64,24 @@ function gui(buttonList) {
         .attr("dx", ".35em")
         .attr("y", buttonHeight / 2)
         .attr("dy", ".35em")
-        .text(function(d){return d.label});
+        .text(function(d) {return d.label;});
 
-    buttons.on("mouseover", function(d){
-                d3.select(d3.event.target.parentNode)
-                    .classed("highlight", true);
-            })
-        .on("mouseout", function(d){
-                d3.select(d3.event.target.parentNode)
-                    .classed("highlight", false);
-            })
-
+    buttons.on("mouseover", function(d) {
+        d3.select(d3.event.target.parentNode)
+            .classed("highlight", true);
+    })
+        .on("mouseout", function(d) {
+            d3.select(d3.event.target.parentNode)
+                .classed("highlight", false);
+        })
         .on("click", function(d){
-                d3.selectAll(".selected")
-                    .classed("selected", false)
-                clearSimulation()
-                simulate(d.function, d.args)
-                d3.select(d3.event.target.parentNode)
-                    .classed("selected", true);
-            })
+            d3.selectAll(".selected")
+                .classed("selected", false);
+            clearSimulation();
+            simulate(d.function, d.args);
+            d3.select(d3.event.target.parentNode)
+                .classed("selected", true);
+        });
 
     }
 
@@ -100,11 +89,11 @@ function clearSimulation() {
     let simDiv = document.getElementById("sim");
     while (simDiv.firstChild) simDiv.removeChild(simDiv.firstChild);
     let statDiv = d3.select("#stats").remove();
+}
 
-   }
 function simulate(sysFunc, args){
     system = sysFunc(...args);
-    console.log(system)
+    console.log(system);
     bodies = system.bodies;
     if (system.hasOwnProperty("stepsPerFrame")) {
         steps = system.stepsPerFrame;
@@ -112,7 +101,6 @@ function simulate(sysFunc, args){
     else { steps = 1; }
     [spheres] = init();
     animate_leapfrog();
-
     window.addEventListener('resize', onWindowResize, true);
 }
 
@@ -150,7 +138,7 @@ function init() {
         spheres.push(sphere);
     }
 
-    if (system.sunOn){
+    if (system.sunOn) {
         let sun = spheres[0];
         sun.material.emissive.set(0xfcd440);
 
@@ -176,9 +164,7 @@ function init() {
         // overall light
         let ambient = new THREE.AmbientLight(0xf0f0f0);
         scene.add(ambient);
-
     }
-
 
 
     renderer = new THREE.WebGLRenderer();
