@@ -4,7 +4,7 @@ import Body from "./systems.js";
 export const G = 6.67408E-11;
 
 
-function accel(i, b) {
+export function accel(i, b) {
     // Compute acceleration due to gravity on body i by all other bodies
     let a = new Vec3(0, 0, 0);
     for (let j = 0; j < b.length; j++) {
