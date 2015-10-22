@@ -7,6 +7,11 @@ cp -r textures/ "$path"
 cp -r lib/ "$path"
 webpack --optimize-minimize --output-path "$path"
 cd "$path"
+git mv CNAME CNAME-disabled
+git commit -m "force cloudfare cache refresh"
+git push
+sleep 300
+git mv CNAME-disabled CNAME
 git add -A
 git commit -m "update sunsistemo"
 git push -u origin master

@@ -2,16 +2,12 @@ import * as calc from "./calc.js";
 let Vec3 = THREE.Vector3;
 
 let textureSets = {
-    planets: ["earth", "jupiter", "mars", "mercury", "moon", "neptune",
-              "pluto", "saturn", "uranus", "venus"],
+    solar: ["sun", "mercury", "venus", "earth", "moon", "mars", "jupiter",
+            "saturn", "uranus", "neptune", "pluto"],
     balls: ["tennisball", "softball"],
-    all: ["sun", "earth", "jupiter", "mars", "mercury", "moon", "neptune",
-          "pluto", "saturn", "uranus", "venus", "tennisball"]
 };
+textureSets.all = textureSets.solar.concat(textureSets.balls);
 
-function getRandomTexture() {
-    return getRandomFromList(textureSets.all);
-}
 
 class Body {
     constructor(m, r, v, rad, texture, rot) {
@@ -47,19 +43,20 @@ class Body {
 
 export default Body
 
-let allTextures = { "sun":     loadTextures("sun", true, false, false),
-                "mercury": loadTextures("mercury", true, true,  false),
-                "venus":   loadTextures("venus", true, true,  false),
-                "earth":   loadTextures("earth", true, true, true),
-                "mars":    loadTextures("mars", true, true,  false),
-                "moon":    loadTextures("moon", true, true,  false),
-                "jupiter": loadTextures("jupiter", true, false, false),
-                "saturn":  loadTextures("saturn", true, false, false),
-                "uranus":  loadTextures("uranus", true, false, false),
-                "neptune": loadTextures("neptune", true, false, false),
-                "pluto":   loadTextures("pluto", true, true,  false),
-                "tennisball": loadTextures("tennisball", true, true, true),
-                "softball": loadTextures("softball", true, true, false)
+let allTextures = {
+    "sun":        loadTextures("sun", true, false, false),
+    "mercury":    loadTextures("mercury", true, true,  false),
+    "venus":      loadTextures("venus", true, true,  false),
+    "earth":      loadTextures("earth", true, true, true),
+    "mars":       loadTextures("mars", true, true,  false),
+    "moon":       loadTextures("moon", true, true,  false),
+    "jupiter":    loadTextures("jupiter", true, false, false),
+    "saturn":     loadTextures("saturn", true, false, false),
+    "uranus":     loadTextures("uranus", true, false, false),
+    "neptune":    loadTextures("neptune", true, false, false),
+    "pluto":      loadTextures("pluto", true, true,  false),
+    "tennisball": loadTextures("tennisball", true, true, true),
+    "softball":   loadTextures("softball", true, true, false)
 };
 
 let randomRot = () => Math.random() / 30;
@@ -252,7 +249,6 @@ export function genBodies(n, bodyTexture, sunOn, collisions) {
         collisions: collisions,
         sunOn: sunOn,
         sphereP: 12
-
     };
 }
 
@@ -279,7 +275,6 @@ export function genBodiesRot(n, bodyTexture, sunOn, collisions) {
         collisions: collisions,
         sunOn: sunOn,
         sphereP: 12
-
     };
 }
 
@@ -287,14 +282,15 @@ function ThreeBodyPlanarPeriodicOrbit(x1d, y1d) {
 
     let f = () => {
         let m = 1 / calc.G;
-        let s1 = new Body(m, new Vec3(-1, 0, 0), new Vec3(x1d, y1d, 0), 0.05, getRandomTexture(), new Vec3(0, randomRot(), 0));
-        let s2 = new Body(m, new Vec3(-s1.r.x, 0, 0), new Vec3(s1.v.x, s1.v.y, 0), 0.05, getRandomTexture(), new Vec3(0, randomRot(), 0));
-        let s3 = new Body(m, new Vec3(0, 0, 0), new Vec3(-2 * s1.v.x, -2 * s1.v.y), 0.05, getRandomTexture(), new Vec3(0, randomRot(), 0));
+        let [t1, t2, t3] = getRandomSample(textureSets.all, 3);
+        let s1 = new Body(m, new Vec3(-1, 0, 0), new Vec3(x1d, y1d, 0), 0.05, t1, new Vec3(0, randomRot(), 0));
+        let s2 = new Body(m, new Vec3(-s1.r.x, 0, 0), new Vec3(s1.v.x, s1.v.y, 0), 0.05, t2, new Vec3(0, randomRot(), 0));
+        let s3 = new Body(m, new Vec3(0, 0, 0), new Vec3(-2 * s1.v.x, -2 * s1.v.y), 0.05, t3, new Vec3(0, randomRot(), 0));
 
         return {
             bodies: [s1, s2, s3],
-            stepsize: 0.00001,
-            stepsPerFrame: 500,
+            stepsize: 0.00002,
+            stepsPerFrame: 300,
             camera: {x: 0, y: 0, z: 2},
             collisions: false
         };
@@ -319,7 +315,7 @@ export let genYinYang1 = ThreeBodyPlanarPeriodicOrbit(0.51394, 0.30474);
 export let genYinYang2 = ThreeBodyPlanarPeriodicOrbit(0.41682, 0.33033);
 
 
-function loadTextures(textureName, textOn, bumpOn, specOn){
+function loadTextures(textureName, textOn, bumpOn, specOn) {
     let fullTexture = {};
     if (textOn) {
         let texture = THREE.ImageUtils.loadTexture("textures/" + textureName + "map.jpg" );
@@ -348,3 +344,15 @@ function getRandomFromList(list) {
 export function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }                               // from: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
+
+function getRandomSample(list, n) {
+    // get n unique random elements from list
+    let l = [];
+    while (l.length < n) {
+        let e = getRandomFromList(list);
+        if (l.indexOf(e) === -1) {
+            l.push(e);
+        }
+    }
+    return l;
+}

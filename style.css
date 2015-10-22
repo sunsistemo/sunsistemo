@@ -4,13 +4,13 @@ html, body {
      overflow: hidden;
  }
 #gui{
-  opacity:1;  
+  opacity:1;
   position: fixed;
   display: block;
   z-index: 5;
  }
 #sim{
-  opacity:1;  
+  opacity:1;
   position: relative;
   right: 0;
   display: block;
@@ -24,7 +24,7 @@ html, body {
 .button > text{
   fill: #000;
   opacity: 1;
-} 
+}
 .highlight{
   fill: rgba(196,119,73,1);
   opacity: .95;
@@ -36,7 +36,7 @@ html, body {
 }
 text{
   font-family: "Trebuchet MS", Helvetica, sans-serif ;
-  
+
 }
 #stats{
   right: 0;
