@@ -19,7 +19,7 @@ let menuList = [
     {"label":"Two Bodies", "function": systems.gen2Bodies, "args": [true]},
     {"label":"Three Bodies", "function": systems.gen3Bodies, "args": [true]},
     {"label":"Random Bodies", "function": systems.genBodies, "args": [200, true, false]},
-    {"label":"Angular Momentum", "function": systems.genBodiesRot, "args": [200, "planets", true, false]},
+    {"label":"Angular Momentum", "function": systems.genBodiesRot, "args": [200, "solar", true, false]},
     {"label":"Angular with Bounce", "function": systems.genBodiesRot, "args": [200,"balls", true, true, true]},
     {"label":"Butterfly 1", "function": systems.genButterFly1, "args": []},
     {"label":"Yin Yang 1", "function": systems.genYinYang1, "args": []},

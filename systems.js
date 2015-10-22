@@ -239,7 +239,7 @@ export function genBodies(n, bodyTexture, sunOn, collisions) {
         let velVec = new Vec3(getRandomInt(-500,500), getRandomInt(-500,500), getRandomInt(-500,500));
         let rotation = new Vec3(0, randomRot(), 0);
 
-        bodies.push(new Body(1E16, posVec, velVec, 8, getRandomFromList(textureSets.planets), rotation));
+        bodies.push(new Body(1E16, posVec, velVec, 8, getRandomFromList(textureSets.solar), rotation));
     }
 
     return {
