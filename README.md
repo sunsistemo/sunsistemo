@@ -1,6 +1,9 @@
 Sunsistemo
 ==========
 
+<a href="https://js.org" target="_blank" title="JS.ORG | JavaScript Community">
+<img src="https://logo.js.org/dark_tiny.png" width="77" alt="JS.ORG Logo"/></a>
+
 Sunsistemo is a numerical N-body simulator written in JavaScript.
 [It runs completely in the browser](https://sunsistemo.js.org/). Given a set of
 initial conditions it will evolve the chosen system and visualize it in 3D, all
