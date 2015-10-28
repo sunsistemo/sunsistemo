@@ -4,7 +4,7 @@ let Vec3 = THREE.Vector3;
 let textureSets = {
     solar: ["sun", "mercury", "venus", "earth", "moon", "mars", "jupiter",
             "saturn", "uranus", "neptune", "pluto"],
-    balls: ["tennisball", "softball"],
+    balls: ["tennisball", "softball"]
 };
 textureSets.all = textureSets.solar.concat(textureSets.balls);
 
@@ -153,7 +153,6 @@ export function genSolarSystem(sunOn) {
         new Vec3());
 
 
-    // let bodies = [sun, mercury, venus, earth];
     let bodies = [sun, mercury, venus, earth, moon, mars, jupiter, saturn, uranus, neptune, pluto];
 
     let scaleRadius = rad => Math.pow(rad, 1/5);
@@ -167,12 +166,9 @@ export function genSolarSystem(sunOn) {
 
     return {
         bodies: bodies,
-        // stepsize: 10000. * (60 * 60 * 24),
         stepsize: .1 * (60 * 60 * 24),
         stepsPerFrame: 1 ,
         scalePosition: vec => vec.multiplyScalar(2 * 1E-09),
-        // scalePosition: vec => vec.setLength(Math.pow(vec.length(), 1/6)),
-        // scalePosition: vec => vec.setLength(Math.log(vec.length)/Math.log(1.4)),
         camera: {x: 0, y: 0, z: 1300},
         collisions: false,
         sunOn: sunOn,
@@ -303,18 +299,19 @@ export let genYinYang2 = ThreeBodyPlanarPeriodicOrbit(0.41682, 0.33033);
 
 function loadTextures(textureName, textOn, bumpOn, specOn) {
     let fullTexture = {};
+    let loader = new THREE.TextureLoader();
     if (textOn) {
-        let texture = THREE.ImageUtils.loadTexture("textures/" + textureName + "map.jpg" );
+        let texture = loader.load("textures/" + textureName + "map.jpg" );
         texture.minFilter = THREE.LinearFilter;
         fullTexture.texture = texture;
     }
     if (bumpOn) {
-        let bumpMap = THREE.ImageUtils.loadTexture("textures/" + textureName + "bump.jpg");
+        let bumpMap = loader.load("textures/" + textureName + "bump.jpg");
         bumpMap.minFilter = THREE.LinearFilter;
         fullTexture.bumpMap = bumpMap;
     }
     if (specOn) {
-        let specularMap = THREE.ImageUtils.loadTexture("textures/" + textureName + "specular.jpg");
+        let specularMap = loader.load("textures/" + textureName + "specular.jpg");
         specularMap.minFilter = THREE.LinearFilter;
         fullTexture.specularMap = specularMap;
     }

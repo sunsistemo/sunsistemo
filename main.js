@@ -10,7 +10,6 @@ let numBodies = 1;
 let sphereP = 12;
 let sunOn;
 
-var steps;
 let system, bodies, spheres;
 
 let menuList = [
@@ -18,15 +17,14 @@ let menuList = [
     {"label":"Only Sun", "function": systems.genBodiesRot, "args": [0, true, true]},
     {"label":"Two Bodies", "function": systems.gen2Bodies, "args": [true]},
     {"label":"Three Bodies", "function": systems.gen3Bodies, "args": [true]},
+    {"label":"Solar System", "function": systems.genSolarSystem, "args": [true]},
     {"label":"Random Bodies", "function": systems.genBodies, "args": [200, true, false]},
     {"label":"Angular Momentum", "function": systems.genBodiesRot, "args": [200, "solar", true, false]},
     {"label":"Angular with Bounce", "function": systems.genBodiesRot, "args": [200,"balls", true, true, true]},
     {"label":"Butterfly 1", "function": systems.genButterFly1, "args": []},
     {"label":"Yin Yang 1", "function": systems.genYinYang1, "args": []},
     {"label":"Goggles", "function": systems.genGoggles, "args": []},
-    {"label":"Yarn", "function": systems.genYarn, "args": []},
-    {"label":"Solar System", "function": systems.genSolarSystem, "args": [true] }
-
+    {"label":"Yarn", "function": systems.genYarn, "args": []}
 ];
 gui(menuList);
 
@@ -98,16 +96,9 @@ function simulate(sysFunc, args){
     console.log(system);
     bodies = system.bodies;
     if (system.hasOwnProperty("stepsPerFrame")) {
-        steps = system.stepsPerFrame;
+        system.steps = system.stepsPerFrame;
     }
-    // if (system.hasOwnProperty("scaleposition")) {
-    //     for (b in system.bodies){
-    //         b.set(system.scalePosition(b.r),b.v);
-
-    //     }
-    //     // console.log()
-    // }
-    else { steps = 1; }
+    else { system.steps = 1; }
     [spheres] = init();
     animate_leapfrog();
     window.addEventListener('resize', onWindowResize, true);
@@ -123,11 +114,13 @@ function init() {
     // orbitcontrols
     controls = new THREE.OrbitControls(camera);
 
+    // texture loader
+    let loader = new THREE.TextureLoader();
+
     // starfield skymap
     let geometry  = new THREE.SphereGeometry(100000, 32, 32);
     let material  = new THREE.MeshBasicMaterial({
-        map: THREE.ImageUtils.loadTexture("textures/galaxy_starfield.png"),
-        side: THREE.BackSide
+        map: loader.load("textures/galaxy_starfield.png"), side: THREE.BackSide
     });
     let skymap  = new THREE.Mesh(geometry, material);
     scene.add(skymap);
@@ -157,8 +150,8 @@ function init() {
 
         // sun glow
         let spriteMaterial = new THREE.SpriteMaterial({
-            map: THREE.ImageUtils.loadTexture("textures/glow.png"),
-            color: 0xfc843f, transparent: false, blending: THREE.AdditiveBlending
+            map: loader.load("textures/glow.png"), color: 0xfc843f,
+            transparent: false, blending: THREE.AdditiveBlending
         });
         let sprite = new THREE.Sprite(spriteMaterial);
         let glowRadius = sun.geometry.boundingSphere.radius * 5;
@@ -179,6 +172,7 @@ function init() {
     renderer.setClearColor(0x000000);
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.getElementById("sim").appendChild(renderer.domElement);
+
     // stats
     stats = new Stats();
     stats.domElement.style.position = 'absolute';
@@ -195,10 +189,9 @@ function animate_leapfrog() {
 }
 
 function animate() {
-    for (let i = 0; i < steps; i ++) {
+    for (let i = 0; i < system.steps; i ++) {
         bodies = calc.symplectic_euler(bodies, system.stepsize);
     }
-    
 
     // [bodies, spheres] = calc.removeLostBodies(bodies, spheres, scene, 2000);
 
