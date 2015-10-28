@@ -24,8 +24,9 @@ let menuList = [
     {"label":"Butterfly 1", "function": systems.genButterFly1, "args": []},
     {"label":"Yin Yang 1", "function": systems.genYinYang1, "args": []},
     {"label":"Goggles", "function": systems.genGoggles, "args": []},
-    {"label":"Yarn", "function": systems.genYarn, "args": []}
-    // {"label":"Solar System", "function": systems.genSolarSystem, "args": [true] }
+    {"label":"Yarn", "function": systems.genYarn, "args": []},
+    {"label":"Solar System", "function": systems.genSolarSystem, "args": [true] }
+
 ];
 gui(menuList);
 
@@ -43,7 +44,7 @@ function gui(buttonList) {
     .attr("class", "menuSvg");
 
     var buttons = menuSvg.selectAll(".button")
-            .data(menuList);
+        .data(menuList)
 
     buttons.enter()
         .append("g")
@@ -99,6 +100,13 @@ function simulate(sysFunc, args){
     if (system.hasOwnProperty("stepsPerFrame")) {
         steps = system.stepsPerFrame;
     }
+    // if (system.hasOwnProperty("scaleposition")) {
+    //     for (b in system.bodies){
+    //         b.set(system.scalePosition(b.r),b.v);
+
+    //     }
+    //     // console.log()
+    // }
     else { steps = 1; }
     [spheres] = init();
     animate_leapfrog();
@@ -144,7 +152,7 @@ function init() {
         sun.material.emissive.set(0xfcd440);
 
         // sunlight
-        let light = new THREE.PointLight(0xfcd440, 2, 2000);
+        let light = new THREE.PointLight(0xfcd440, 2, 8000);
         sun.add(light);
 
         // sun glow
@@ -166,7 +174,6 @@ function init() {
         let ambient = new THREE.AmbientLight(0xf0f0f0);
         scene.add(ambient);
     }
-
 
     renderer = new THREE.WebGLRenderer();
     renderer.setClearColor(0x000000);
@@ -191,11 +198,13 @@ function animate() {
     for (let i = 0; i < steps; i ++) {
         bodies = calc.symplectic_euler(bodies, system.stepsize);
     }
+    
 
-    [bodies, spheres] = calc.removeLostBodies(bodies, spheres, scene, 2000);
+    // [bodies, spheres] = calc.removeLostBodies(bodies, spheres, scene, 2000);
 
     for (let i = 0; i < bodies.length; i++) {
-        let pos = bodies[i].r;
+        let pos = bodies[i].r.clone();
+
         if (system.hasOwnProperty("scalePosition")) {
             pos = system.scalePosition(pos);
         }

@@ -152,39 +152,25 @@ export function genSolarSystem(sunOn) {
         "pluto",
         new Vec3());
 
-    let bodies = [sun, mercury, venus, earth, mars, jupiter, saturn, uranus,
-                  neptune, pluto];
+
     // let bodies = [sun, mercury, venus, earth];
+    let bodies = [sun, mercury, venus, earth, moon, mars, jupiter, saturn, uranus, neptune, pluto];
 
     let scaleRadius = rad => Math.pow(rad, 1/5);
-    let scaleFactor = 1E-9;
-
-    // copy bodies
-    let b = [];
-    for (let e of bodies) {
-        b.push(e);
+    for (let b of bodies) {
+        b.rad = scaleRadius(b.rad);
     }
 
     function sqrtVec(vec) {
         return new Vec3(Math.sqrt(vec.x), Math.sqrt(vec.y), Math.sqrt(vec.z));
     }
 
-    // try to scale quantities keeping physical proportions
-    for (let i = 0; i < bodies.length; i++) {
-        b[i].rad = scaleRadius(b[i].rad);
-        b[i].r = b[i].r.multiplyScalar(scaleFactor);
-        b[i].m = b[i].m * Math.pow(scaleFactor, 2);
-        // F = mv^2 / r -> v = sqrt( a * r)
-        b[i].v = calc.accel(i, bodies).multiply(b[i].r);
-    }
-    console.log(b);
-
     return {
-        bodies: b,
+        bodies: bodies,
         // stepsize: 10000. * (60 * 60 * 24),
-        stepsize: 1,
-        stepsPerFrame: 1,
-        // scalePosition: vec => vec.multiplyScalar(1E-08),
+        stepsize: .1 * (60 * 60 * 24),
+        stepsPerFrame: 1 ,
+        scalePosition: vec => vec.multiplyScalar(2 * 1E-09),
         // scalePosition: vec => vec.setLength(Math.pow(vec.length(), 1/6)),
         // scalePosition: vec => vec.setLength(Math.log(vec.length)/Math.log(1.4)),
         camera: {x: 0, y: 0, z: 1300},
