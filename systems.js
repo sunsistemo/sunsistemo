@@ -172,7 +172,9 @@ export function genSolarSystem(sunOn) {
         camera: {x: 0, y: 0, z: 1300},
         collisions: false,
         sunOn: sunOn,
-        sphereP: 32
+        sphereP: 32,
+        boundary: 1E13,
+        counter: "date"
     };
 }
 
@@ -188,7 +190,8 @@ export function gen2Bodies(sunOn) {
         camera: {x: 0, y: 0, z: 250},
         collisions: false,
         sunOn: sunOn,
-        sphereP: 32
+        sphereP: 32,
+        boundary: 2000
 
     };
 }
@@ -206,7 +209,9 @@ export function gen3Bodies(sunOn) {
         camera: {x: 0, y: 0, z: 250},
         collisions: false,
         sunOn: sunOn,
-        sphereP: 32
+        sphereP: 32,
+        boundary: 2000
+
 
     };
 }
@@ -227,10 +232,13 @@ export function genBodies(n, bodyTexture, sunOn, collisions) {
     return {
         bodies: bodies,
         stepsize: 0.001,
+        stepsPerFrame: 1,
         camera: {x: 0, y: 0, z: 400},
         collisions: collisions,
         sunOn: sunOn,
-        sphereP: 12
+        sphereP: 12,
+        boundary: 2000
+
     };
 }
 
@@ -253,10 +261,12 @@ export function genBodiesRot(n, bodyTexture, sunOn, collisions) {
     return {
         bodies: bodies,
         stepsize: 0.0005,
+        stepsPerFrame: 1,
         camera: {x: 0, y: 0, z: 400},
         collisions: collisions,
         sunOn: sunOn,
-        sphereP: 12
+        sphereP: 12,
+        boundary: 2000
     };
 }
 
@@ -274,7 +284,8 @@ function ThreeBodyPlanarPeriodicOrbit(x1d, y1d) {
             stepsize: 0.00002,
             stepsPerFrame: 300,
             camera: {x: 0, y: 0, z: 2},
-            collisions: false
+            collisions: false,
+            boundary: 2000
         };
     };
 

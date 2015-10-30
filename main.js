@@ -10,6 +10,8 @@ let numBodies = 1;
 let sphereP = 12;
 let sunOn;
 
+let timer;
+var steps;
 let system, bodies, spheres;
 
 let menuList = [
@@ -24,10 +26,29 @@ let menuList = [
     {"label":"Butterfly 1", "function": systems.genButterFly1, "args": []},
     {"label":"Yin Yang 1", "function": systems.genYinYang1, "args": []},
     {"label":"Goggles", "function": systems.genGoggles, "args": []},
-    {"label":"Yarn", "function": systems.genYarn, "args": []}
-];
-gui(menuList);
 
+    {"label":"Yarn", "function": systems.genYarn, "args": []},
+    // {"label": "Choreographies", "function": showSubmenu, "args": []},
+    {"label":"Solar System", "function": systems.genSolarSystem, "args": [true] }
+];
+
+let choreoSubmenuList = [
+    {"label": "genButterFly1", "function": systems.genButterFly1, "args": []},
+    {"label": "genButterFly2", "function": systems.genButterFly2, "args": []},
+    {"label": "genBumblebee ", "function": systems.genBumblebee , "args": []},
+    {"label": "genMoth1     ", "function": systems.genMoth1     , "args": []},
+    {"label": "genMoth2     ", "function": systems.genMoth2     , "args": []},
+    {"label": "genButterfly3", "function": systems.genButterfly3, "args": []},
+    {"label": "genMoth3     ", "function": systems.genMoth3     , "args": []},
+    {"label": "genGoggles   ", "function": systems.genGoggles   , "args": []},
+    {"label": "genButterfly4", "function": systems.genButterfly4, "args": []},
+    {"label": "genDragonfly ", "function": systems.genDragonfly , "args": []},
+    {"label": "genYarn      ", "function": systems.genYarn      , "args": []},
+    {"label": "genYinYang1  ", "function": systems.genYinYang1  , "args": []},
+    {"label": "genYinYang2  ", "function": systems.genYinYang2  , "args": []}
+]
+
+gui(menuList);
 simulate(menuList[0].function, [0, true, false]);
 
 function gui(buttonList) {
@@ -78,6 +99,61 @@ function gui(buttonList) {
             d3.selectAll(".selected")
                 .classed("selected", false);
             clearSimulation();
+            simulate(d.function, d.args.push(d));
+            d3.select(d3.event.target.parentNode)
+                .classed("selected", true);
+        });
+
+    }
+
+function showSubmenu(submenuList, menuButton){
+        let buttonHeight = 40;
+    let buttonWidth = 200;
+    let body = d3.select("body");
+    let menuDiv = body.selectAll("#gui");
+    menuDiv.style();
+    let menuSvg = menuDiv.append("svg")
+    .attr("width", buttonWidth + 50 + "px")
+    .attr("height", buttonHeight * menuList.length + 20 + "px")
+    .attr("class", "menuSvg");
+
+    var buttons = menuSvg.selectAll(".button")
+        .data(submenuList)
+
+    buttons.enter()
+        .append("g")
+        .attr("transform", function(d, i) {
+            return ("translate(" + 10 + "," + ((i * buttonHeight) + 10) + ")");
+        })
+        .attr("class", "button");
+
+    buttons.append("rect")
+        // .style("fill", "#aaa")
+        .style("opacity",".5")
+        .attr("width", (buttonWidth))
+        .attr("height", buttonHeight - 3)
+        .attr("rx", 5)
+        .attr("ry", 5);
+
+    buttons.append("text")
+        .style("fill", "black")
+        .attr("dx", ".35em")
+        .attr("y", buttonHeight / 2)
+        .attr("dy", ".35em")
+        .text(function(d) {return d.label;});
+
+    buttons.on("mouseover", function(d) {
+        d3.select(d3.event.target.parentNode)
+            .classed("highlight", true);
+    })
+        .on("mouseout", function(d) {
+            d3.select(d3.event.target.parentNode)
+                .classed("highlight", false);
+        })
+        .on("click", function(d){
+            d3.selectAll(".selected")
+                .classed("selected", false);
+            clearSimulation();
             simulate(d.function, d.args);
             d3.select(d3.event.target.parentNode)
                 .classed("selected", true);
@@ -88,19 +164,23 @@ function gui(buttonList) {
 function clearSimulation() {
     let simDiv = document.getElementById("sim");
     while (simDiv.firstChild) simDiv.removeChild(simDiv.firstChild);
+    let timeDiv = document.getElementById("time");
+    while (timeDiv.firstChild) timeDiv.removeChild(timeDiv.firstChild);
     let statDiv = d3.select("#stats").remove();
 }
 
 function simulate(sysFunc, args){
     system = sysFunc(...args);
-    console.log(system);
     bodies = system.bodies;
     if (system.hasOwnProperty("stepsPerFrame")) {
         system.steps = system.stepsPerFrame;
     }
+
     else { system.steps = 1; }
+    timer = new Date(0);
     [spheres] = init();
     animate_leapfrog();
+
     window.addEventListener('resize', onWindowResize, true);
 }
 
@@ -110,7 +190,6 @@ function init() {
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 100000);
     camera.position.set(system.camera.x, system.camera.y, system.camera.z);
     scene.add(camera);
-
     // orbitcontrols
     controls = new THREE.OrbitControls(camera);
 
@@ -124,6 +203,7 @@ function init() {
     });
     let skymap  = new THREE.Mesh(geometry, material);
     scene.add(skymap);
+    
 
     // spheres
     let spheres = [];
@@ -132,7 +212,7 @@ function init() {
         let material = new THREE.MeshPhongMaterial();
         material.map = b.getTexture();
         material.bumpMap = b.getBumpMap();
-        material.bumpScale = 0.1;
+        material.bumpScale = 0.3;
         material.specularMap = b.getSpecularMap();
         let sphere = new THREE.Mesh(geometry, material);
         sphere.position.set(b.r.x, b.r.y, b.r.z);
@@ -168,6 +248,7 @@ function init() {
         scene.add(ambient);
     }
 
+
     renderer = new THREE.WebGLRenderer();
     renderer.setClearColor(0x000000);
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -189,11 +270,17 @@ function animate_leapfrog() {
 }
 
 function animate() {
+
+    timer.setTime(timer.getTime() + (system.stepsize * system.stepsPerFrame * 1000));
     for (let i = 0; i < system.steps; i ++) {
         bodies = calc.symplectic_euler(bodies, system.stepsize);
     }
+    // console.log(new Date(timer).getMilliseconds());
+    console.log(timer);
 
-    // [bodies, spheres] = calc.removeLostBodies(bodies, spheres, scene, 2000);
+
+
+    [bodies, spheres] = calc.removeLostBodies(bodies, spheres, scene, system.boundary);
 
     for (let i = 0; i < bodies.length; i++) {
         let pos = bodies[i].r.clone();
@@ -210,14 +297,25 @@ function animate() {
         if (system.collisions) {
             for (let j = i + 1; j < bodies.length; j++) {
                 if ((i !== j) && (calc.touch(bodies[i],bodies[j]))) {
-                    calc.elasticCollision(bodies[i],bodies[j]);
-                    // calc.mergeCollision(bodies, spheres, scene, bodies[i], bodies[j]);
+                    if (calc.checkBodiesApproach(bodies[i],bodies[j])){
+                        calc.elasticCollision(bodies[i],bodies[j]);
+                        // calc.mergeCollision(bodies, spheres, scene, bodies[i], bodies[j]);
+                    }
                 }
             }
         }
     }
-
+    // if (timer < 10000000000) {
+    //     requestAnimationFrame(animate);
+    // }
     requestAnimationFrame(animate);
+
+        // timer
+
+    if (system.counter === "date") {
+            document.getElementById("time").innerHTML = timer.getDate() + "/" + (timer.getMonth() + 1) + "/" + timer.getFullYear()
+    }
+
     render();
     controls.update();
     stats.update();
