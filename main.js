@@ -1,5 +1,6 @@
 let scene, camera, light, renderer;
-let controls, stats;
+let controls, stats; 
+let requestId = undefined;
 
 import Body from "./systems.js";
 import * as systems from "./systems.js";
@@ -23,25 +24,24 @@ let menuList = [
     {"label":"Random Bodies", "function": systems.genBodies, "args": [200, true, false]},
     {"label":"Angular Momentum", "function": systems.genBodiesRot, "args": [200, "solar", true, false]},
     {"label":"Angular with Bounce", "function": systems.genBodiesRot, "args": [200,"balls", true, true, true]},
-    {"label":"Butterfly 1", "function": systems.genButterFly1, "args": []},
-    {"label":"Yin Yang 1", "function": systems.genYinYang1, "args": []},
-    {"label":"Goggles", "function": systems.genGoggles, "args": []},
-
-    {"label":"Yarn", "function": systems.genYarn, "args": []},
-    // {"label": "Choreographies", "function": showSubmenu, "args": []},
-    {"label":"Solar System", "function": systems.genSolarSystem, "args": [true] }
+    // {"label":"Butterfly 1", "function": systems.genButterFly1, "args": []},
+    // {"label":"Yin Yang 1", "function": systems.genYinYang1, "args": []},
+    // {"label":"Goggles", "function": systems.genGoggles, "args": []},
+    // {"label":"Yarn", "function": systems.genYarn, "args": []},
+    {"label": "Choreographies", "function": showSubmenu, "args": []}
+    // {"label":"Solar System", "function": systems.genSolarSystem, "args": [true] }
 ];
 
 let choreoSubmenuList = [
     {"label": "genButterFly1", "function": systems.genButterFly1, "args": []},
     {"label": "genButterFly2", "function": systems.genButterFly2, "args": []},
+    {"label": "genButterfly3", "function": systems.genButterfly3, "args": []},
+    {"label": "genButterfly4", "function": systems.genButterfly4, "args": []},
     {"label": "genBumblebee ", "function": systems.genBumblebee , "args": []},
     {"label": "genMoth1     ", "function": systems.genMoth1     , "args": []},
     {"label": "genMoth2     ", "function": systems.genMoth2     , "args": []},
-    {"label": "genButterfly3", "function": systems.genButterfly3, "args": []},
     {"label": "genMoth3     ", "function": systems.genMoth3     , "args": []},
     {"label": "genGoggles   ", "function": systems.genGoggles   , "args": []},
-    {"label": "genButterfly4", "function": systems.genButterfly4, "args": []},
     {"label": "genDragonfly ", "function": systems.genDragonfly , "args": []},
     {"label": "genYarn      ", "function": systems.genYarn      , "args": []},
     {"label": "genYinYang1  ", "function": systems.genYinYang1  , "args": []},
@@ -58,8 +58,8 @@ function gui(buttonList) {
     let menuDiv = body.selectAll("#gui");
     menuDiv.style();
     let menuSvg = menuDiv.append("svg")
-    .attr("width", buttonWidth + 50 + "px")
-    .attr("height", buttonHeight * menuList.length + 20 + "px")
+    .attr("width", 400 + 50 + "px")
+    .attr("height", "800px")
     .attr("class", "menuSvg");
 
     var buttons = menuSvg.selectAll(".button")
@@ -98,8 +98,17 @@ function gui(buttonList) {
         .on("click", function(d){
             d3.selectAll(".selected")
                 .classed("selected", false);
-            clearSimulation();
-            simulate(d.function, d.args.push(d));
+            if (d["function"] !== showSubmenu){
+                clearSimulation();
+                simulate(d.function, d.args);
+                clearSubmenu();
+
+            }
+            else{
+                if (!d3.select(d3.event.target.parentNode).classed(".selected")){
+                    showSubmenu(d.args.push(d));
+                }
+            }
             d3.select(d3.event.target.parentNode)
                 .classed("selected", true);
         });
@@ -107,25 +116,26 @@ function gui(buttonList) {
     }
 
 function showSubmenu(submenuList, menuButton){
-        let buttonHeight = 40;
-    let buttonWidth = 200;
+    let buttonHeight = 40;
+    let buttonWidth = 150;
     let body = d3.select("body");
     let menuDiv = body.selectAll("#gui");
-    menuDiv.style();
-    let menuSvg = menuDiv.append("svg")
-    .attr("width", buttonWidth + 50 + "px")
-    .attr("height", buttonHeight * menuList.length + 20 + "px")
-    .attr("class", "menuSvg");
-
-    var buttons = menuSvg.selectAll(".button")
-        .data(submenuList)
-
+    let menuSvg = menuDiv.selectAll(".menuSvg");
+    var buttons = menuSvg.selectAll(".subButton")
+        .data(choreoSubmenuList);
     buttons.enter()
         .append("g")
+        .attr("class", "button subButton")
+        .style("opacity", 0)
         .attr("transform", function(d, i) {
-            return ("translate(" + 10 + "," + ((i * buttonHeight) + 10) + ")");
+            return ("translate(" + 220 + "," + -50 + ")");
         })
-        .attr("class", "button");
+        .transition()
+        .duration(2000)        
+        .style("opacity", 1)
+        .attr("transform", function(d, i) {
+            return ("translate(" + 220 + "," + ((i * buttonHeight) + 10) + ")");
+        });
 
     buttons.append("rect")
         // .style("fill", "#aaa")
@@ -151,7 +161,7 @@ function showSubmenu(submenuList, menuButton){
                 .classed("highlight", false);
         })
         .on("click", function(d){
-            d3.selectAll(".selected")
+            d3.selectAll(".subButton.selected")
                 .classed("selected", false);
             clearSimulation();
             simulate(d.function, d.args);
@@ -159,7 +169,29 @@ function showSubmenu(submenuList, menuButton){
                 .classed("selected", true);
         });
 
+
     }
+
+function hideSubmenu() {
+    let buttons = d3.selectAll(".subButton");
+    buttons.transition()
+        .duration(2000)
+        .style("opacity", 0)
+        .attr("transform", function(d, i) {
+                return ("translate(" + 220 + "," + -50 + ")");
+            });
+}
+
+function clearSubmenu() {
+    let buttons = d3.selectAll(".subButton");
+    buttons.transition()
+        .duration(2000)
+        .style("opacity", 0)
+        .attr("transform", function(d, i) {
+                return ("translate(" + 220 + "," + 1000 + ")");
+            })
+        .remove()
+}
 
 function clearSimulation() {
     let simDiv = document.getElementById("sim");
@@ -167,6 +199,8 @@ function clearSimulation() {
     let timeDiv = document.getElementById("time");
     while (timeDiv.firstChild) timeDiv.removeChild(timeDiv.firstChild);
     let statDiv = d3.select("#stats").remove();
+    cancelAnimationFrame(requestId);
+    requestId = undefined;
 }
 
 function simulate(sysFunc, args){
@@ -266,7 +300,7 @@ function init() {
 
 function animate_leapfrog() {
     bodies = calc.leapfrog(bodies, system.stepsize);
-    requestAnimationFrame(animate);
+    requestId = requestAnimationFrame(animate);
 }
 
 function animate() {
@@ -276,7 +310,7 @@ function animate() {
         bodies = calc.symplectic_euler(bodies, system.stepsize);
     }
     // console.log(new Date(timer).getMilliseconds());
-    console.log(timer);
+    // console.log(timer);
 
 
 
@@ -308,7 +342,7 @@ function animate() {
     // if (timer < 10000000000) {
     //     requestAnimationFrame(animate);
     // }
-    requestAnimationFrame(animate);
+    requestId = requestAnimationFrame(animate);
 
         // timer
 
