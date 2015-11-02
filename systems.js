@@ -192,7 +192,6 @@ export function gen2Bodies(sunOn) {
         sunOn: sunOn,
         sphereP: 32,
         boundary: 2000
-
     };
 }
 
@@ -211,8 +210,6 @@ export function gen3Bodies(sunOn) {
         sunOn: sunOn,
         sphereP: 32,
         boundary: 2000
-
-
     };
 }
 
@@ -238,7 +235,6 @@ export function genBodies(n, bodyTexture, sunOn, collisions) {
         sunOn: sunOn,
         sphereP: 12,
         boundary: 2000
-
     };
 }
 

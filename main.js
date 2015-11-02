@@ -290,7 +290,7 @@ function init() {
 }
 
 function animate_leapfrog() {
-    bodies = calc.leapfrog(bodies, system.stepsize);
+    bodies = calc.leapfrog_initial(bodies, system.stepsize);
     requestId = requestAnimationFrame(animate);
 }
 
@@ -298,7 +298,7 @@ function animate() {
 
     timer.setTime(timer.getTime() + (system.stepsize * system.stepsPerFrame * 1000));
     for (let i = 0; i < system.steps; i ++) {
-        bodies = calc.symplectic_euler(bodies, system.stepsize);
+        bodies = calc.leapfrog(bodies, system.stepsize);
     }
 
     [bodies, spheres] = calc.removeLostBodies(bodies, spheres, scene, system.boundary);

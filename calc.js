@@ -46,15 +46,26 @@ export function symplectic_euler(b, h) {
 }
 
 
-export function leapfrog(b, h) {
-    let bodies = [];
+export function leapfrog_initial(b, h) {
+    // kickoff the leapfrog integrator by computing v_{1/2} from v_0
     for (let i = 0; i < b.length; i++) {
-        let r = b[i].r.clone().add(b[i].v.clone().multiplyScalar(h));
-        let v = b[i].v.clone().add(accel(i, b).multiplyScalar(.5*h));
-        bodies.push(b[i].clone().set(r, v));
+        b[i].v.add(accel(i, b).multiplyScalar(.5 * h));
     }
 
-    return bodies;
+    return b;
+}
+
+export function leapfrog(b, h) {
+    // leapfrog integration from x_0 and v_{1/2}
+    for (let i = 0; i < b.length; i++) {
+        b[i].r.add(b[i].v.clone().multiplyScalar(h));
+    }
+
+    for (let i = 0; i < b.length; i++) {
+        b[i].v.add(accel(i, b).multiplyScalar(h));
+    }
+
+    return b;
 }
 
 export function getGravCenter(b) {
@@ -68,7 +79,7 @@ export function getGravCenter(b) {
     return gravCenter.divideScalar(totMass);
 }
 
-export function removeLostBodies(b, spheres, scene, range){
+export function removeLostBodies(b, spheres, scene, range) {
     let gravCent = getGravCenter(b);
     for (let i = 0; i < b.length; i++) {
         let pos = b[i].r.clone();
