@@ -1,5 +1,5 @@
 let scene, camera, light, renderer;
-let controls, stats; 
+let controls, stats;
 let requestId = undefined;
 
 import Body from "./systems.js";
@@ -16,37 +16,32 @@ var steps;
 let system, bodies, spheres;
 
 let menuList = [
-    {"label":"Empty", "function": systems.genBodies, "args": [0, true, false]},
-    {"label":"Only Sun", "function": systems.genBodiesRot, "args": [0, true, true]},
-    {"label":"Two Bodies", "function": systems.gen2Bodies, "args": [true]},
-    {"label":"Three Bodies", "function": systems.gen3Bodies, "args": [true]},
-    {"label":"Solar System", "function": systems.genSolarSystem, "args": [true]},
-    {"label":"Random Bodies", "function": systems.genBodies, "args": [200, true, false]},
-    {"label":"Angular Momentum", "function": systems.genBodiesRot, "args": [200, "solar", true, false]},
-    {"label":"Angular with Bounce", "function": systems.genBodiesRot, "args": [200,"balls", true, true, true]},
-    // {"label":"Butterfly 1", "function": systems.genButterFly1, "args": []},
-    // {"label":"Yin Yang 1", "function": systems.genYinYang1, "args": []},
-    // {"label":"Goggles", "function": systems.genGoggles, "args": []},
-    // {"label":"Yarn", "function": systems.genYarn, "args": []},
+    {"label": "Empty", "function": systems.genBodies, "args": [0, true, false]},
+    {"label": "Only Sun", "function": systems.genBodiesRot, "args": [0, true, true]},
+    {"label": "Two Bodies", "function": systems.gen2Bodies, "args": [true]},
+    {"label": "Three Bodies", "function": systems.gen3Bodies, "args": [true]},
+    {"label": "Solar System", "function": systems.genSolarSystem, "args": [true]},
+    {"label": "Random Bodies", "function": systems.genBodies, "args": [200, true, false]},
+    {"label": "Angular Momentum", "function": systems.genBodiesRot, "args": [200, "solar", true, false]},
+    {"label": "Angular with Bounce", "function": systems.genBodiesRot, "args": [200,"balls", true, true, true]},
     {"label": "Choreographies", "function": showSubmenu, "args": []}
-    // {"label":"Solar System", "function": systems.genSolarSystem, "args": [true] }
 ];
 
 let choreoSubmenuList = [
-    {"label": "genButterFly1", "function": systems.genButterFly1, "args": []},
-    {"label": "genButterFly2", "function": systems.genButterFly2, "args": []},
-    {"label": "genButterfly3", "function": systems.genButterfly3, "args": []},
-    {"label": "genButterfly4", "function": systems.genButterfly4, "args": []},
-    {"label": "genBumblebee ", "function": systems.genBumblebee , "args": []},
-    {"label": "genMoth1     ", "function": systems.genMoth1     , "args": []},
-    {"label": "genMoth2     ", "function": systems.genMoth2     , "args": []},
-    {"label": "genMoth3     ", "function": systems.genMoth3     , "args": []},
-    {"label": "genGoggles   ", "function": systems.genGoggles   , "args": []},
-    {"label": "genDragonfly ", "function": systems.genDragonfly , "args": []},
-    {"label": "genYarn      ", "function": systems.genYarn      , "args": []},
-    {"label": "genYinYang1  ", "function": systems.genYinYang1  , "args": []},
-    {"label": "genYinYang2  ", "function": systems.genYinYang2  , "args": []}
-]
+    {"label": "ButterFly1", "function": systems.genButterFly1, "args": []},
+    {"label": "ButterFly2", "function": systems.genButterFly2, "args": []},
+    {"label": "Butterfly3", "function": systems.genButterfly3, "args": []},
+    {"label": "Butterfly4", "function": systems.genButterfly4, "args": []},
+    {"label": "Bumblebee ", "function": systems.genBumblebee , "args": []},
+    {"label": "Moth1     ", "function": systems.genMoth1     , "args": []},
+    {"label": "Moth2     ", "function": systems.genMoth2     , "args": []},
+    {"label": "Moth3     ", "function": systems.genMoth3     , "args": []},
+    {"label": "Goggles   ", "function": systems.genGoggles   , "args": []},
+    {"label": "Dragonfly ", "function": systems.genDragonfly , "args": []},
+    {"label": "Yarn      ", "function": systems.genYarn      , "args": []},
+    {"label": "YinYang1  ", "function": systems.genYinYang1  , "args": []},
+    {"label": "YinYang2  ", "function": systems.genYinYang2  , "args": []}
+];
 
 gui(menuList);
 simulate(menuList[0].function, [0, true, false]);
@@ -112,10 +107,9 @@ function gui(buttonList) {
             d3.select(d3.event.target.parentNode)
                 .classed("selected", true);
         });
+}
 
-    }
-
-function showSubmenu(submenuList, menuButton){
+function showSubmenu(submenuList, menuButton) {
     let buttonHeight = 40;
     let buttonWidth = 150;
     let body = d3.select("body");
@@ -131,7 +125,7 @@ function showSubmenu(submenuList, menuButton){
             return ("translate(" + 220 + "," + -50 + ")");
         })
         .transition()
-        .duration(2000)        
+        .duration(2000)
         .style("opacity", 1)
         .attr("transform", function(d, i) {
             return ("translate(" + 220 + "," + ((i * buttonHeight) + 10) + ")");
@@ -168,9 +162,7 @@ function showSubmenu(submenuList, menuButton){
             d3.select(d3.event.target.parentNode)
                 .classed("selected", true);
         });
-
-
-    }
+}
 
 function hideSubmenu() {
     let buttons = d3.selectAll(".subButton");
@@ -193,6 +185,7 @@ function clearSubmenu() {
         .remove()
 }
 
+
 function clearSimulation() {
     let simDiv = document.getElementById("sim");
     while (simDiv.firstChild) simDiv.removeChild(simDiv.firstChild);
@@ -209,7 +202,6 @@ function simulate(sysFunc, args){
     if (system.hasOwnProperty("stepsPerFrame")) {
         system.steps = system.stepsPerFrame;
     }
-
     else { system.steps = 1; }
     timer = new Date(0);
     [spheres] = init();
@@ -224,6 +216,7 @@ function init() {
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 100000);
     camera.position.set(system.camera.x, system.camera.y, system.camera.z);
     scene.add(camera);
+
     // orbitcontrols
     controls = new THREE.OrbitControls(camera);
 
@@ -237,7 +230,6 @@ function init() {
     });
     let skymap  = new THREE.Mesh(geometry, material);
     scene.add(skymap);
-    
 
     // spheres
     let spheres = [];
@@ -277,11 +269,10 @@ function init() {
         scene.add(ambient);
     }
     else {
-        // overall light
+        // brighter overall light if no sun
         let ambient = new THREE.AmbientLight(0xf0f0f0);
         scene.add(ambient);
     }
-
 
     renderer = new THREE.WebGLRenderer();
     renderer.setClearColor(0x000000);
@@ -309,10 +300,6 @@ function animate() {
     for (let i = 0; i < system.steps; i ++) {
         bodies = calc.symplectic_euler(bodies, system.stepsize);
     }
-    // console.log(new Date(timer).getMilliseconds());
-    // console.log(timer);
-
-
 
     [bodies, spheres] = calc.removeLostBodies(bodies, spheres, scene, system.boundary);
 
@@ -331,7 +318,7 @@ function animate() {
         if (system.collisions) {
             for (let j = i + 1; j < bodies.length; j++) {
                 if ((i !== j) && (calc.touch(bodies[i],bodies[j]))) {
-                    if (calc.checkBodiesApproach(bodies[i],bodies[j])){
+                    if (calc.checkBodiesApproach(bodies[i],bodies[j])) {
                         calc.elasticCollision(bodies[i],bodies[j]);
                         // calc.mergeCollision(bodies, spheres, scene, bodies[i], bodies[j]);
                     }
@@ -339,15 +326,12 @@ function animate() {
             }
         }
     }
-    // if (timer < 10000000000) {
-    //     requestAnimationFrame(animate);
-    // }
     requestId = requestAnimationFrame(animate);
 
-        // timer
-
+    // timer
     if (system.counter === "date") {
-            document.getElementById("time").innerHTML = timer.getDate() + "/" + (timer.getMonth() + 1) + "/" + timer.getFullYear()
+        let [month, day, year] = timer.toDateString().split(' ').splice(1);
+        document.getElementById("time").innerHTML = [day, month, year].join(' ');
     }
 
     render();
