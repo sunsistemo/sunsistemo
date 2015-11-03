@@ -157,7 +157,7 @@ export function genSolarSystem(sunOn) {
 
     let bodies = [sun, mercury, venus, earth, moon, mars, jupiter, saturn, uranus, neptune, pluto];
 
-    let scaleRadius = rad => Math.pow(rad, 1/4)* 2 *1E-1;
+    let scaleRadius = rad => Math.pow(rad, 1/5);
 
     for (let b of bodies) {
         b.rad = scaleRadius(b.rad);
