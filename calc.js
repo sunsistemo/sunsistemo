@@ -1,4 +1,5 @@
-let Vec3 = THREE.Vector3;
+let Vec3 = require("three.js").Vector3;
+
 import Body from "./systems.js";
 
 export const G = 6.67408E-11;

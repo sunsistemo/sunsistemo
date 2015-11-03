@@ -1,3 +1,8 @@
+let THREE = require("three.js");
+let OrbitControls = require("three-orbit-controls")(THREE);
+let d3 = require("d3");
+let Stats = require("stats.js");
+
 let scene, camera, light, renderer;
 let controls, stats;
 let requestId = undefined;
@@ -12,7 +17,6 @@ let sphereP = 12;
 let sunOn;
 
 let timer;
-var steps;
 let system, bodies, spheres;
 
 let menuList = [
@@ -23,7 +27,7 @@ let menuList = [
     {"label": "Solar System", "function": systems.genSolarSystem, "args": [true]},
     {"label": "Random Bodies", "function": systems.genBodies, "args": [200, true, false]},
     {"label": "Angular Momentum", "function": systems.genBodiesRot, "args": [200, "solar", true, false]},
-    {"label": "Angular with Bounce", "function": systems.genBodiesRot, "args": [200,"balls", true, true, true]},
+    {"label": "Angular with Bounce", "function": systems.genBodiesRot, "args": [200, "balls", true, true, true]},
     {"label": "Choreographies", "function": showSubmenu, "args": []}
 ];
 
@@ -218,7 +222,7 @@ function init() {
     scene.add(camera);
 
     // orbitcontrols
-    controls = new THREE.OrbitControls(camera);
+    controls = new OrbitControls(camera);
 
     // texture loader
     let loader = new THREE.TextureLoader();

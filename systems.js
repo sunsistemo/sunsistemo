@@ -1,5 +1,7 @@
-import * as calc from "./calc.js";
+let THREE = require("three.js");
 let Vec3 = THREE.Vector3;
+
+import * as calc from "./calc.js";
 
 let textureSets = {
     solar: ["sun", "mercury", "venus", "earth", "moon", "mars", "jupiter",
