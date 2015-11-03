@@ -21,7 +21,7 @@ html, body {
   opacity:1;
   position: fixed;
   top:20px;
-  right: 30px;
+  right: 100px;
   display: block;
   z-index: 5;
   color: white;
@@ -53,5 +53,5 @@ text{
 }
 #stats{
   right: 0;
-  z-index: -5;
+  z-index: 15;
 }

@@ -121,6 +121,7 @@ function showSubmenu(submenuList, menuButton) {
     let menuSvg = menuDiv.selectAll(".menuSvg");
     var buttons = menuSvg.selectAll(".subButton")
         .data(choreoSubmenuList);
+    
     buttons.enter()
         .append("g")
         .attr("class", "button subButton")
@@ -242,7 +243,7 @@ function init() {
         let material = new THREE.MeshPhongMaterial();
         material.map = b.getTexture();
         material.bumpMap = b.getBumpMap();
-        material.bumpScale = 0.3;
+        material.bumpScale = 0.2;
         material.specularMap = b.getSpecularMap();
         let sphere = new THREE.Mesh(geometry, material);
         sphere.position.set(b.r.x, b.r.y, b.r.z);

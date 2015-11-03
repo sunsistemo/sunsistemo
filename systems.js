@@ -157,7 +157,8 @@ export function genSolarSystem(sunOn) {
 
     let bodies = [sun, mercury, venus, earth, moon, mars, jupiter, saturn, uranus, neptune, pluto];
 
-    let scaleRadius = rad => Math.pow(rad, 1/5);
+    let scaleRadius = rad => Math.pow(rad, 1/4)* 2 *1E-1;
+
     for (let b of bodies) {
         b.rad = scaleRadius(b.rad);
     }
@@ -187,7 +188,7 @@ export function gen2Bodies(sunOn) {
 
     return {
         bodies: bodies,
-        stepsize: 0.000003,
+        stepsize: 0.004,
         stepsPerFrame: 100,
         camera: {x: 0, y: 0, z: 250},
         collisions: false,
@@ -198,7 +199,7 @@ export function gen2Bodies(sunOn) {
 }
 
 export function gen3Bodies(sunOn) {
-    let s1 = new Body(1E19, new Vec3(0, 0, 0), new Vec3(0, 2, 0), 12, "sun", new Vec3(0, 0, randomRot()));
+    let s1 = new Body(1E19, new Vec3(0, 0, 0), new Vec3(0, 0, 0), 12, "sun", new Vec3(0, 0, randomRot()));
     let s2 = new Body(1E18, new Vec3(200, 0, 0), new Vec3(0, 900, 0), 8, "venus", new Vec3(0, 0, randomRot()));
     let s3 = new Body(1E18, new Vec3(-200, 0, 0), new Vec3(0, -900, 0), 8, "earth", new Vec3(0, 0, randomRot()));
     let bodies = [s1, s2, s3];
@@ -224,8 +225,10 @@ export function genBodies(n, bodyTexture, sunOn, collisions) {
         let posVec = new Vec3(getRandomInt(-300,300), getRandomInt(-300,300), getRandomInt(-300,300));
         let velVec = new Vec3(getRandomInt(-500,500), getRandomInt(-500,500), getRandomInt(-500,500));
         let rotation = new Vec3(0, randomRot(), 0);
+        let radius = (Math.random() * (15)) + 4;
 
-        bodies.push(new Body(1E16, posVec, velVec, 8, getRandomFromList(textureSets.solar), rotation));
+
+        bodies.push(new Body((radius^3)*1E15, posVec, velVec, radius, getRandomFromList(textureSets.solar), rotation));
     }
 
     return {
@@ -235,7 +238,7 @@ export function genBodies(n, bodyTexture, sunOn, collisions) {
         camera: {x: 0, y: 0, z: 400},
         collisions: collisions,
         sunOn: sunOn,
-        sphereP: 12,
+        sphereP: 32,
         boundary: 2000
     };
 }
@@ -252,8 +255,9 @@ export function genBodiesRot(n, bodyTexture, sunOn, collisions) {
         let posVec = new Vec3(getRandomInt(-300,300), getRandomInt(-300,300), getRandomInt(-300,300));
         let velVec = new Vec3(0,0,0);
         let rotation = new Vec3(0, randomRot(), 0);
+        let size = (Math.random() * (15)) + 4
         velVec.crossVectors(posVec, angMomVec).multiplyScalar(Math.random() + .1);
-        bodies.push(new Body(1E14, posVec, velVec, 8, getRandomFromList(textureSet), rotation));
+        bodies.push(new Body(size*1E14, posVec, velVec, size, getRandomFromList(textureSet), rotation));
     }
 
     return {
@@ -263,7 +267,7 @@ export function genBodiesRot(n, bodyTexture, sunOn, collisions) {
         camera: {x: 0, y: 0, z: 400},
         collisions: collisions,
         sunOn: sunOn,
-        sphereP: 12,
+        sphereP: 32,
         boundary: 2000
     };
 }
