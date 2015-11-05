@@ -1,6 +1,7 @@
 Sunsistemo
 ==========
 
+[![GNU General Public License v3](https://www.gnu.org/graphics/gplv3-127x51.png)](https://www.gnu.org/licenses/gpl.html)
 <a href="https://js.org" target="_blank" title="JS.ORG | JavaScript Community">
 <img src="https://logo.js.org/dark_tiny.png" width="77" alt="JS.ORG Logo"/></a>
 [![Dependency Status](https://david-dm.org/sunsistemo/sunsistemo.svg)](https://david-dm.org/sunsistemo/sunsistemo)

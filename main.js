@@ -121,7 +121,7 @@ function showSubmenu(submenuList, menuButton) {
     let menuSvg = menuDiv.selectAll(".menuSvg");
     var buttons = menuSvg.selectAll(".subButton")
         .data(choreoSubmenuList);
-    
+
     buttons.enter()
         .append("g")
         .attr("class", "button subButton")
@@ -201,7 +201,7 @@ function clearSimulation() {
     requestId = undefined;
 }
 
-function simulate(sysFunc, args){
+function simulate(sysFunc, args) {
     system = sysFunc(...args);
     bodies = system.bodies;
     if (system.hasOwnProperty("stepsPerFrame")) {

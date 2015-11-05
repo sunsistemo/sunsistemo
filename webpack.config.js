@@ -1,8 +1,11 @@
 module.exports = {
-    entry: "./main.js",
+    entry: {
+        sunsistemo: "./main.js",
+        "validation/validation": "./validation/test.js"
+    },
     output: {
         path: __dirname,
-        filename: "sunsistemo.js"
+        filename: "[name].js"
     },
     module: {
         loaders: [
