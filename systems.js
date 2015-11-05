@@ -157,7 +157,7 @@ export function genSolarSystem(sunOn) {
 
     let bodies = [sun, mercury, venus, earth, moon, mars, jupiter, saturn, uranus, neptune, pluto];
 
-    let scaleRadius = rad => Math.pow(rad, 1/5);
+    let scaleRadius = rad => Math.pow(rad, 1/4)*0.2;
 
     for (let b of bodies) {
         b.rad = scaleRadius(b.rad);
@@ -171,7 +171,7 @@ export function genSolarSystem(sunOn) {
         bodies: bodies,
         stepsize: .1 * (60 * 60 * 24),
         stepsPerFrame: 1 ,
-        scalePosition: vec => vec.multiplyScalar(2 * 1E-09),
+        scalePosition: vec => vec.multiplyScalar(1 * 1E-09),
         camera: {x: 0, y: 0, z: 1300},
         collisions: false,
         sunOn: sunOn,
@@ -188,8 +188,8 @@ export function gen2Bodies(sunOn) {
 
     return {
         bodies: bodies,
-        stepsize: 0.000003,
-        stepsPerFrame: 100,
+        stepsize: 0.0000005,
+        stepsPerFrame: 1000,
         camera: {x: 0, y: 0, z: 250},
         collisions: false,
         sunOn: sunOn,
@@ -199,15 +199,15 @@ export function gen2Bodies(sunOn) {
 }
 
 export function gen3Bodies(sunOn) {
-    let s1 = new Body(1E19, new Vec3(0, 0, 0), new Vec3(0, 0, 0), 12, "sun", new Vec3(0, 0, randomRot()));
+    let s1 = new Body(1E19, new Vec3(0, 0, 0), new Vec3(0, 2, 0), 12, "sun", new Vec3(0, 0, randomRot()));
     let s2 = new Body(1E18, new Vec3(200, 0, 0), new Vec3(0, 900, 0), 8, "venus", new Vec3(0, 0, randomRot()));
     let s3 = new Body(1E18, new Vec3(-200, 0, 0), new Vec3(0, -900, 0), 8, "earth", new Vec3(0, 0, randomRot()));
     let bodies = [s1, s2, s3];
 
     return {
         bodies: bodies,
-        stepsize: 0.000003,
-        stepsPerFrame: 100,
+        stepsize: 0.0000003,
+        stepsPerFrame: 1000,
         camera: {x: 0, y: 0, z: 250},
         collisions: false,
         sunOn: sunOn,
@@ -283,8 +283,10 @@ function ThreeBodyPlanarPeriodicOrbit(x1d, y1d) {
 
         return {
             bodies: [s1, s2, s3],
+            // stepsize: 0.00002,
+            // stepsPerFrame: 300,
             stepsize: 0.00002,
-            stepsPerFrame: 300,
+            stepsPerFrame: 5000,
             camera: {x: 0, y: 0, z: 2},
             collisions: false,
             boundary: 2000

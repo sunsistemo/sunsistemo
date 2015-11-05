@@ -10,6 +10,7 @@ let requestId = undefined;
 import Body from "./systems.js";
 import * as systems from "./systems.js";
 import * as calc from "./calc.js";
+import * as validate from "./validate.js";
 
 let bodyTexture = true;
 let numBodies = 1;
@@ -18,18 +19,6 @@ let sunOn;
 
 let timer;
 let system, bodies, spheres;
-
-let menuList = [
-    {"label": "Empty", "function": systems.genBodies, "args": [0, true, false]},
-    {"label": "Only Sun", "function": systems.genBodiesRot, "args": [0, true, true]},
-    {"label": "Two Bodies", "function": systems.gen2Bodies, "args": [true]},
-    {"label": "Three Bodies", "function": systems.gen3Bodies, "args": [true]},
-    {"label": "Solar System", "function": systems.genSolarSystem, "args": [true]},
-    {"label": "Random Bodies", "function": systems.genBodies, "args": [200, true, false]},
-    {"label": "Angular Momentum", "function": systems.genBodiesRot, "args": [200, "solar", true, false]},
-    {"label": "Angular with Bounce", "function": systems.genBodiesRot, "args": [200, "balls", true, true, true]},
-    {"label": "Choreographies", "function": showSubmenu, "args": []}
-];
 
 let choreoSubmenuList = [
     {"label": "ButterFly1", "function": systems.genButterFly1, "args": []},
@@ -46,6 +35,26 @@ let choreoSubmenuList = [
     {"label": "YinYang1  ", "function": systems.genYinYang1  , "args": []},
     {"label": "YinYang2  ", "function": systems.genYinYang2  , "args": []}
 ];
+
+let validationSubmenuList = [
+    {"label": "Two Bodies", "function": validate.startTwoBodyValidation, "args": [200]},
+    {"label": "Solar System", "function": validate.startSolarSystemValidation, "args": []}
+];
+
+let menuList = [
+    {"label": "Empty", "function": systems.genBodies, "args": [0, true, false]},
+    {"label": "Only Sun", "function": systems.genBodiesRot, "args": [0, true, true]},
+    {"label": "Two Bodies", "function": systems.gen2Bodies, "args": [true]},
+    {"label": "Three Bodies", "function": systems.gen3Bodies, "args": [true]},
+    {"label": "Solar System", "function": systems.genSolarSystem, "args": [true]},
+    {"label": "Random Bodies", "function": systems.genBodies, "args": [200, "solar", false, true]},
+    {"label": "Angular Momentum", "function": systems.genBodiesRot, "args": [200, "solar", true, false]},
+    {"label": "Angular with Bounce", "function": systems.genBodiesRot, "args": [200, "balls", true, true, true]},
+    {"label": "Choreographies", "function": showSubmenu, "args": [choreoSubmenuList]}
+    // {"label": "Validate", "function": showSubmenu, "args": [validationSubmenuList]}
+];
+
+
 
 gui(menuList);
 simulate(menuList[0].function, [0, true, false]);
@@ -97,30 +106,29 @@ function gui(buttonList) {
         .on("click", function(d){
             d3.selectAll(".selected")
                 .classed("selected", false);
-            if (d["function"] !== showSubmenu){
-                clearSimulation();
-                simulate(d.function, d.args);
+            if (d["function"] == showSubmenu){
                 clearSubmenu();
+                d["function"](...d["args"]);
 
             }
             else{
-                if (!d3.select(d3.event.target.parentNode).classed(".selected")){
-                    showSubmenu(d.args.push(d));
-                }
+                clearSimulation();
+                simulate(d.function, d.args);
+                clearSubmenu();
             }
             d3.select(d3.event.target.parentNode)
                 .classed("selected", true);
         });
 }
 
-function showSubmenu(submenuList, menuButton) {
+function showSubmenu(submenuList) {
     let buttonHeight = 40;
     let buttonWidth = 150;
     let body = d3.select("body");
     let menuDiv = body.selectAll("#gui");
     let menuSvg = menuDiv.selectAll(".menuSvg");
     var buttons = menuSvg.selectAll(".subButton")
-        .data(choreoSubmenuList);
+        .data(submenuList);
 
     buttons.enter()
         .append("g")
@@ -130,14 +138,13 @@ function showSubmenu(submenuList, menuButton) {
             return ("translate(" + 220 + "," + -50 + ")");
         })
         .transition()
-        .duration(2000)
+        .duration(800)
         .style("opacity", 1)
         .attr("transform", function(d, i) {
             return ("translate(" + 220 + "," + ((i * buttonHeight) + 10) + ")");
         });
 
     buttons.append("rect")
-        // .style("fill", "#aaa")
         .style("opacity",".5")
         .attr("width", (buttonWidth))
         .attr("height", buttonHeight - 3)
@@ -162,8 +169,14 @@ function showSubmenu(submenuList, menuButton) {
         .on("click", function(d){
             d3.selectAll(".subButton.selected")
                 .classed("selected", false);
-            clearSimulation();
-            simulate(d.function, d.args);
+            if (d["function"] == validate.startTwoBodyValidation || d["function"] == validate.startSolarSystemValidation){
+                d["function"](...d["args"]);
+
+            }
+            else{
+                clearSimulation();
+                simulate(d.function, d.args);
+            }
             d3.select(d3.event.target.parentNode)
                 .classed("selected", true);
         });
@@ -172,7 +185,7 @@ function showSubmenu(submenuList, menuButton) {
 function hideSubmenu() {
     let buttons = d3.selectAll(".subButton");
     buttons.transition()
-        .duration(2000)
+        .duration(800)
         .style("opacity", 0)
         .attr("transform", function(d, i) {
                 return ("translate(" + 220 + "," + -50 + ")");
@@ -182,7 +195,7 @@ function hideSubmenu() {
 function clearSubmenu() {
     let buttons = d3.selectAll(".subButton");
     buttons.transition()
-        .duration(2000)
+        .duration(800)
         .style("opacity", 0)
         .attr("transform", function(d, i) {
                 return ("translate(" + 220 + "," + 1000 + ")");
@@ -253,7 +266,8 @@ function init() {
 
     if (system.sunOn) {
         let sun = spheres[0];
-        sun.material.emissive.set(0xfcd440);
+        sun.material.emissive.set(0xCAAA33);
+        sun.material.emissiveMap = sun.material.map
 
         // sunlight
         let light = new THREE.PointLight(0xfcd440, 2, 8000);
@@ -265,7 +279,7 @@ function init() {
             transparent: false, blending: THREE.AdditiveBlending
         });
         let sprite = new THREE.Sprite(spriteMaterial);
-        let glowRadius = sun.geometry.boundingSphere.radius * 5;
+        let glowRadius = sun.geometry.boundingSphere.radius * 3;
         sprite.scale.set(glowRadius, glowRadius, 1.0);
         sun.add(sprite);
 
