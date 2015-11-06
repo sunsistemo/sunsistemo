@@ -10,7 +10,7 @@ let requestId = undefined;
 import Body from "./systems.js";
 import * as systems from "./systems.js";
 import * as calc from "./calc.js";
-import * as validate from "./validate.js";
+// import * as validate from "./validate.js";
 
 let bodyTexture = true;
 let numBodies = 1;
@@ -36,14 +36,13 @@ let choreoSubmenuList = [
     {"label": "YinYang2  ", "function": systems.genYinYang2  , "args": []}
 ];
 
-let validationSubmenuList = [
-    {"label": "Two Bodies", "function": validate.startTwoBodyValidation, "args": [200]},
-    {"label": "Solar System", "function": validate.startSolarSystemValidation, "args": []}
-];
+// let validationSubmenuList = [
+//     {"label": "Two Bodies", "function": validate.startTwoBodyValidation, "args": [200]},
+//     {"label": "Solar System", "function": validate.startSolarSystemValidation, "args": []}
+// ];
 
 let menuList = [
-    {"label": "Empty", "function": systems.genBodies, "args": [0, true, false]},
-    {"label": "Only Sun", "function": systems.genBodiesRot, "args": [0, true, true]},
+    {"label": "The Sun", "function": systems.genBodiesRot, "args": [0, true, true]},
     {"label": "Two Bodies", "function": systems.gen2Bodies, "args": [true]},
     {"label": "Three Bodies", "function": systems.gen3Bodies, "args": [true]},
     {"label": "Solar System", "function": systems.genSolarSystem, "args": [true]},
@@ -51,13 +50,11 @@ let menuList = [
     {"label": "Angular Momentum", "function": systems.genBodiesRot, "args": [200, "solar", true, false]},
     {"label": "Angular with Bounce", "function": systems.genBodiesRot, "args": [200, "balls", true, true, true]},
     {"label": "Choreographies", "function": showSubmenu, "args": [choreoSubmenuList]}
-    // {"label": "Validate", "function": showSubmenu, "args": [validationSubmenuList]}
 ];
 
 
-
 gui(menuList);
-simulate(menuList[0].function, [0, true, false]);
+simulate(menuList[0].function, menuList[0].args);
 
 function gui(buttonList) {
     let buttonHeight = 50;
@@ -169,10 +166,11 @@ function showSubmenu(submenuList) {
         .on("click", function(d){
             d3.selectAll(".subButton.selected")
                 .classed("selected", false);
-            if (d["function"] == validate.startTwoBodyValidation || d["function"] == validate.startSolarSystemValidation){
-                d["function"](...d["args"]);
+            // if (d["function"] == validate.startTwoBodyValidation || d["function"] == validate.startSolarSystemValidation){
+            //     d["function"](...d["args"]);
 
-            }
+            // }
+            if (false) {}
             else{
                 clearSimulation();
                 simulate(d.function, d.args);
@@ -267,7 +265,7 @@ function init() {
     if (system.sunOn) {
         let sun = spheres[0];
         sun.material.emissive.set(0xCAAA33);
-        sun.material.emissiveMap = sun.material.map
+        sun.material.emissiveMap = sun.material.map;
 
         // sunlight
         let light = new THREE.PointLight(0xfcd440, 2, 8000);

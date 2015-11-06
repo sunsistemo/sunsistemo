@@ -188,8 +188,8 @@ export function gen2Bodies(sunOn) {
 
     return {
         bodies: bodies,
-        stepsize: 0.0000005,
-        stepsPerFrame: 1000,
+        stepsize: 0.000005,
+        stepsPerFrame: 300,
         camera: {x: 0, y: 0, z: 250},
         collisions: false,
         sunOn: sunOn,
@@ -206,8 +206,8 @@ export function gen3Bodies(sunOn) {
 
     return {
         bodies: bodies,
-        stepsize: 0.0000003,
-        stepsPerFrame: 1000,
+        stepsize: 0.000003,
+        stepsPerFrame: 300,
         camera: {x: 0, y: 0, z: 250},
         collisions: false,
         sunOn: sunOn,
