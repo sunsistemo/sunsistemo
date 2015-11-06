@@ -1,6 +1,7 @@
 Sunsistemo
 ==========
 
+[![Computational Science](http://preview.computationalscience.nl/wp-content/uploads/2014/09/computationalsciencelogo-fc-trans-300x100.png)](http://uva.computationalscience.nl/)
 [![GNU General Public License v3](https://www.gnu.org/graphics/gplv3-127x51.png)](https://www.gnu.org/licenses/gpl.html)
 <a href="https://js.org" target="_blank" title="JS.ORG | JavaScript Community">
 <img src="https://logo.js.org/dark_tiny.png" width="77" alt="JS.ORG Logo"/></a>
