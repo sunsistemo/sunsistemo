@@ -10,7 +10,6 @@ let requestId = undefined;
 import Body from "./systems.js";
 import * as systems from "./systems.js";
 import * as calc from "./calc.js";
-// import * as validate from "./validate.js";
 
 let bodyTexture = true;
 let numBodies = 1;
@@ -25,21 +24,16 @@ let choreoSubmenuList = [
     {"label": "ButterFly2", "function": systems.genButterFly2, "args": []},
     {"label": "Butterfly3", "function": systems.genButterfly3, "args": []},
     {"label": "Butterfly4", "function": systems.genButterfly4, "args": []},
-    {"label": "Bumblebee ", "function": systems.genBumblebee , "args": []},
-    {"label": "Moth1     ", "function": systems.genMoth1     , "args": []},
-    {"label": "Moth2     ", "function": systems.genMoth2     , "args": []},
-    {"label": "Moth3     ", "function": systems.genMoth3     , "args": []},
-    {"label": "Goggles   ", "function": systems.genGoggles   , "args": []},
-    {"label": "Dragonfly ", "function": systems.genDragonfly , "args": []},
-    {"label": "Yarn      ", "function": systems.genYarn      , "args": []},
-    {"label": "YinYang1  ", "function": systems.genYinYang1  , "args": []},
-    {"label": "YinYang2  ", "function": systems.genYinYang2  , "args": []}
+    {"label": "Bumblebee", "function": systems.genBumblebee, "args": []},
+    {"label": "Moth1", "function": systems.genMoth1, "args": []},
+    {"label": "Moth2", "function": systems.genMoth2, "args": []},
+    {"label": "Moth3", "function": systems.genMoth3, "args": []},
+    {"label": "Goggles", "function": systems.genGoggles, "args": []},
+    {"label": "Dragonfly", "function": systems.genDragonfly, "args": []},
+    {"label": "Yarn", "function": systems.genYarn, "args": []},
+    {"label": "YinYang1", "function": systems.genYinYang1, "args": []},
+    {"label": "YinYang2", "function": systems.genYinYang2, "args": []}
 ];
-
-// let validationSubmenuList = [
-//     {"label": "Two Bodies", "function": validate.startTwoBodyValidation, "args": [200]},
-//     {"label": "Solar System", "function": validate.startSolarSystemValidation, "args": []}
-// ];
 
 let menuList = [
     {"label": "The Sun", "function": systems.genBodiesRot, "args": [0, true, true]},
@@ -51,10 +45,61 @@ let menuList = [
     {"label": "Angular with Bounce", "function": systems.genBodiesRot, "args": [200, "balls", true, true, true]},
     {"label": "Choreographies", "function": showSubmenu, "args": [choreoSubmenuList]}
 ];
-
-
 gui(menuList);
-simulate(menuList[0].function, menuList[0].args);
+
+
+function getSystem(label) {
+    for (let s of menuList) {
+        if (s.label === label) {
+            return s;
+        }
+    }
+
+    for (let s of choreoSubmenuList) {
+        if (s.label === label) {
+            return s;
+        }
+    }
+
+    return menuList[0];
+}
+
+
+function getURLParameters() {
+    let params = window.location.search;
+    let URLParameters = {s: menuList[0].label};           // default system
+
+    if (params.startsWith('?')) {
+        params = params.slice(1).split('&');
+
+        for (let p of params) {
+            let par = p.split('=');
+            URLParameters[par[0]] = decodeURIComponent(par[1].replace(/-/g, ' '));
+        }
+    }
+    return URLParameters;
+}
+let URLParameters = getURLParameters();
+let systemLabel = getSystem(URLParameters.s);
+simulate(systemLabel);
+
+
+function setURLParameter(parameter, value) {
+    URLParameters[parameter] = value;
+    let search = [];
+
+    for (let key of Object.keys(URLParameters)) {
+        search.push(key + '=' +
+                    encodeURIComponent(URLParameters[key].replace(/ /g, '-')));
+    }
+
+    if (URLParameters.hasOwnProperty('s')) {
+        let label = URLParameters.s;
+        window.history.replaceState({s: label}, "Sunsistemo - " + label,
+                                    '?' + search.join('&'));
+    }
+}
+
 
 function gui(buttonList) {
     let buttonHeight = 50;
@@ -68,7 +113,7 @@ function gui(buttonList) {
     .attr("class", "menuSvg");
 
     var buttons = menuSvg.selectAll(".button")
-        .data(menuList)
+            .data(menuList);
 
     buttons.enter()
         .append("g")
@@ -100,17 +145,16 @@ function gui(buttonList) {
             d3.select(d3.event.target.parentNode)
                 .classed("highlight", false);
         })
-        .on("click", function(d){
+        .on("click", function(d) {
             d3.selectAll(".selected")
                 .classed("selected", false);
-            if (d["function"] == showSubmenu){
+            if (d["function"] == showSubmenu) {
                 clearSubmenu();
                 d["function"](...d["args"]);
-
             }
-            else{
+            else {
                 clearSimulation();
-                simulate(d.function, d.args);
+                simulate(d);
                 clearSubmenu();
             }
             d3.select(d3.event.target.parentNode)
@@ -163,18 +207,11 @@ function showSubmenu(submenuList) {
             d3.select(d3.event.target.parentNode)
                 .classed("highlight", false);
         })
-        .on("click", function(d){
+        .on("click", function(d) {
             d3.selectAll(".subButton.selected")
                 .classed("selected", false);
-            // if (d["function"] == validate.startTwoBodyValidation || d["function"] == validate.startSolarSystemValidation){
-            //     d["function"](...d["args"]);
-
-            // }
-            if (false) {}
-            else{
-                clearSimulation();
-                simulate(d.function, d.args);
-            }
+            clearSimulation();
+            simulate(d);
             d3.select(d3.event.target.parentNode)
                 .classed("selected", true);
         });
@@ -210,10 +247,11 @@ function clearSimulation() {
     let statDiv = d3.select("#stats").remove();
     cancelAnimationFrame(requestId);
     requestId = undefined;
+    window.removeEventListener("resize", onWindowResize);
 }
 
-function simulate(sysFunc, args) {
-    system = sysFunc(...args);
+function simulate(systemLabel) {
+    system = systemLabel.function(...systemLabel.args);
     bodies = system.bodies;
     if (system.hasOwnProperty("stepsPerFrame")) {
         system.steps = system.stepsPerFrame;
@@ -223,6 +261,7 @@ function simulate(sysFunc, args) {
     [spheres] = init();
     animate_leapfrog();
 
+    setURLParameter('s', systemLabel.label);
     window.addEventListener('resize', onWindowResize, true);
 }
 
@@ -312,7 +351,6 @@ function animate_leapfrog() {
 }
 
 function animate() {
-
     timer.setTime(timer.getTime() + (system.stepsize * system.stepsPerFrame * 1000));
     for (let i = 0; i < system.steps; i ++) {
         bodies = calc.leapfrog(bodies, system.stepsize);
