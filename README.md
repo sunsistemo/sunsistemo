@@ -46,6 +46,7 @@ Lee Stemkoski.
 [HORIZONS System](http://ssd.jpl.nasa.gov/horizons.cgi).
 * The initial conditions for the three-body planar periodic orbits are from
 [arXiv:1303.0181 **[physics.class-ph]**](http://arxiv.org/abs/1303.0181).
+* GitHub corner by [Tim Holman](http://tholman.com/github-corners/).
 
 # License
 
