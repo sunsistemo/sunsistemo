@@ -235,7 +235,7 @@ function clearSubmenu() {
         .attr("transform", function(d, i) {
                 return ("translate(" + 220 + "," + 1000 + ")");
             })
-        .remove()
+        .remove();
 }
 
 
@@ -259,6 +259,13 @@ function simulate(systemLabel) {
     else { system.steps = 1; }
     timer = new Date(0);
     [spheres] = init();
+    if (systemLabel.label === "Solar System") {
+        // Initial orientation for axial rotation
+        for (let s of spheres) {
+            s.rotation.x += 0.5 * Math.PI;
+        }
+    }
+
     animate_leapfrog();
 
     setURLParameter('s', systemLabel.label);

@@ -65,6 +65,13 @@ let randomRot = () => Math.random() / 30;
 
 export function genSolarSystem(sunOn) {
     // Initial conditions of the solar system at 00:00:00 1 January 1970
+    let day = 60 * 60 * 24;
+    let stepsize = .1 * day;
+
+    function scaleRotation(period) {  // period in days
+        let y = 2 * Math.PI / (period * day / stepsize);
+        return new Vec3(0, y, 0);
+    }
 
     let sun = new Body(
         1.98855E30,
@@ -72,7 +79,7 @@ export function genSolarSystem(sunOn) {
         new Vec3(0, 0, 0),
         696342E3,
         "sun",
-        new Vec3());
+        scaleRotation(25.38));
 
     let mercury = new Body(
         3.3011E23,
@@ -80,7 +87,7 @@ export function genSolarSystem(sunOn) {
         new Vec3(-3.878766588423944E+04, 4.109305229662527E+04, 6.918459013107025E+03),
         2439.7E3,
         "mercury",
-        new Vec3());
+        scaleRotation(58.64));
 
     let venus = new Body(
         4.8675E24,
@@ -88,7 +95,7 @@ export function genSolarSystem(sunOn) {
         new Vec3(3.474148284671561E+04, -1.865747137359618E+03, -2.031505677951714E+03),
         6051.8E3,
         "venus",
-        new Vec3());
+        scaleRotation(-243.02));
 
     let earth = new Body(
         5.997219E24,
@@ -96,7 +103,7 @@ export function genSolarSystem(sunOn) {
         new Vec3(-2.977044214085218E+04, -5.568042062189587E+03, 3.960050738736065E-01),
         6371E3,
         "earth",
-        new Vec3());
+        scaleRotation(0.997));
 
     let moon = new Body(
         7.3477E22,
@@ -104,7 +111,7 @@ export function genSolarSystem(sunOn) {
         new Vec3(-2.951549140447329E+04, -6.529794009827214E+03, -7.615838122417218E+01),
         1737.1E3,
         "moon",
-        new Vec3());
+        scaleRotation(27.32));
 
     let mars = new Body(
         6.4171E23,
@@ -112,7 +119,7 @@ export function genSolarSystem(sunOn) {
         new Vec3(-7.557626093692695E+03, 2.476126524795820E+04, 7.047458490385097E+02),
         3389.5E3,
         "mars",
-        new Vec3());
+        scaleRotation(1.026));
 
     let jupiter = new Body(
         1.8986E27,
@@ -120,7 +127,7 @@ export function genSolarSystem(sunOn) {
         new Vec3(4.982523623046754E+03, -1.141782925514267E+04, -6.466474051600457E+01),
         69911E3,
         "jupiter",
-        new Vec3());
+        scaleRotation(0.41));
 
     let saturn  = new Body(
         5.6836E26,
@@ -128,7 +135,7 @@ export function genSolarSystem(sunOn) {
         new Vec3(-6.487121289267689E+03, 7.565952106845154E+03, 1.254418330224025E+02),
         58232E3,
         "saturn",
-        new Vec3());
+        scaleRotation(0.426));
 
     let uranus = new Body(
         8.681E25,
@@ -136,7 +143,7 @@ export function genSolarSystem(sunOn) {
         new Vec3(6.712348901080567E+02, -7.099101277978575E+03, -3.528579247809205E+01),
         25362E3,
         "uranus",
-        new Vec3());
+        scaleRotation(-0.71833));
 
     let neptune = new Body(
         1.0243E26,
@@ -144,7 +151,7 @@ export function genSolarSystem(sunOn) {
         new Vec3(4.633959234836657E+03, -2.767419818371484E+03, -4.957409060715667E+01),
         24622E3,
         "neptune",
-        new Vec3());
+        scaleRotation(0.671));
 
     let pluto = new Body(
         1.305E22,
@@ -152,24 +159,20 @@ export function genSolarSystem(sunOn) {
         new Vec3(6.354565491262041E+02, -5.762636149150082E+03, 4.409493397386148E+02),
         1186E3,
         "pluto",
-        new Vec3());
+        scaleRotation(-6.387));
 
 
     let bodies = [sun, mercury, venus, earth, moon, mars, jupiter, saturn, uranus, neptune, pluto];
 
-    let scaleRadius = rad => Math.pow(rad, 1/4)*0.2;
+    let scaleRadius = rad => Math.pow(rad, 1/4) * 0.2;
 
     for (let b of bodies) {
         b.rad = scaleRadius(b.rad);
     }
 
-    function sqrtVec(vec) {
-        return new Vec3(Math.sqrt(vec.x), Math.sqrt(vec.y), Math.sqrt(vec.z));
-    }
-
     return {
         bodies: bodies,
-        stepsize: .1 * (60 * 60 * 24),
+        stepsize: stepsize,
         stepsPerFrame: 1 ,
         scalePosition: vec => vec.multiplyScalar(1 * 1E-09),
         camera: {x: 0, y: 0, z: 1300},
@@ -255,7 +258,7 @@ export function genBodiesRot(n, bodyTexture, sunOn, collisions) {
         let posVec = new Vec3(getRandomInt(-300,300), getRandomInt(-300,300), getRandomInt(-300,300));
         let velVec = new Vec3(0,0,0);
         let rotation = new Vec3(0, randomRot(), 0);
-        let size = (Math.random() * (15)) + 4
+        let size = (Math.random() * (15)) + 4;
         velVec.crossVectors(posVec, angMomVec).multiplyScalar(Math.random() + .1);
         bodies.push(new Body(size*1E14, posVec, velVec, size, getRandomFromList(textureSet), rotation));
     }
