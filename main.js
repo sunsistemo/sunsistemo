@@ -1,10 +1,9 @@
 let THREE = require("three.js");
 let OrbitControls = require("three-orbit-controls")(THREE);
 let d3 = require("d3");
-let Stats = require("stats.js");
 
 let scene, camera, light, renderer;
-let controls, stats;
+let controls;
 let requestId = undefined;
 
 import Body from "./systems.js";
@@ -13,7 +12,7 @@ import * as calc from "./calc.js";
 
 let bodyTexture = true;
 let numBodies = 1;
-let sphereP = 12;
+let sphereP = 16;
 let sunOn;
 
 let timer;
@@ -244,7 +243,6 @@ function clearSimulation() {
     while (simDiv.firstChild) simDiv.removeChild(simDiv.firstChild);
     let timeDiv = document.getElementById("time");
     while (timeDiv.firstChild) timeDiv.removeChild(timeDiv.firstChild);
-    let statDiv = d3.select("#stats").remove();
     cancelAnimationFrame(requestId);
     requestId = undefined;
     window.removeEventListener("resize", onWindowResize);
@@ -342,13 +340,6 @@ function init() {
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.getElementById("sim").appendChild(renderer.domElement);
 
-    // stats
-    stats = new Stats();
-    stats.domElement.style.position = 'absolute';
-    stats.domElement.style.right = '0px';
-    stats.domElement.style.top = '0px';
-    document.body.appendChild(stats.domElement);
-
     return [spheres];
 }
 
@@ -398,7 +389,6 @@ function animate() {
 
     render();
     controls.update();
-    stats.update();
 }
 
 
