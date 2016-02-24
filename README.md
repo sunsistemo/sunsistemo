@@ -20,10 +20,8 @@ as part of the
 
 Sunsistemo works great on:
 * Chrome (and Chromium based browsers)
-* Safari (and other WebKit browser)
-
-And it is slower on:
 * Firefox
+* Safari (and other WebKit browser)
 
 # Installation
 

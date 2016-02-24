@@ -23,14 +23,14 @@
     "url": "https://github.com/sunsistemo/sunsistemo/issues"
   },
   "devDependencies": {
-    "babel-core": "^5.8.25",
-    "babel-loader": "^5.3.2",
-    "webpack": "^1.12.8",
-    "webpack-dev-server": "^1.12.1"
+    "babel-core": "^5.8.35",
+    "babel-loader": "^5.4.0",
+    "webpack": "^1.12.14",
+    "webpack-dev-server": "^1.14.1"
   },
   "dependencies": {
-    "three.js": "^0.73.0",
-    "d3": "^3.5.6",
+    "d3": "^3.5.16",
+    "three": "^0.74.0",
     "three-orbit-controls": "^72.0.0"
   }
 }

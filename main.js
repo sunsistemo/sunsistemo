@@ -1,4 +1,4 @@
-let THREE = require("three.js");
+let THREE = require("three");
 let OrbitControls = require("three-orbit-controls")(THREE);
 let d3 = require("d3");
 
@@ -11,7 +11,6 @@ import * as systems from "./systems.js";
 import * as calc from "./calc.js";
 
 let bodyTexture = true;
-let numBodies = 1;
 let sphereP = 16;
 let sunOn;
 

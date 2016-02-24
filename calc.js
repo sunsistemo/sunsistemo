@@ -1,4 +1,4 @@
-let Vec3 = require("three.js").Vector3;
+let Vec3 = require("three").Vector3;
 
 import Body from "./systems.js";
 

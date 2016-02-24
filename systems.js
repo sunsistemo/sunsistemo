@@ -1,4 +1,4 @@
-let THREE = require("three.js");
+let THREE = require("three");
 let Vec3 = THREE.Vector3;
 
 import * as calc from "./calc.js";
