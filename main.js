@@ -41,7 +41,8 @@ let menuList = [
     {"label": "Random Bodies", "function": systems.genBodies, "args": [200, "solar", false, true]},
     {"label": "Angular Momentum", "function": systems.genBodiesRot, "args": [200, "solar", true, false]},
     {"label": "Angular with Bounce", "function": systems.genBodiesRot, "args": [200, "balls", true, true, true]},
-    {"label": "Choreographies", "function": showSubmenu, "args": [choreoSubmenuList]}
+    {"label": "Choreographies", "function": showSubmenu, "args": [choreoSubmenuList]},
+    {"label": "About", "function": function () { window.open("sunsistemo.pdf"); }, "args": []}
 ];
 gui(menuList);
 
@@ -149,6 +150,9 @@ function gui(buttonList) {
             if (d["function"] == showSubmenu) {
                 clearSubmenu();
                 d["function"](...d["args"]);
+            }
+            else if (d["label"] === "About") {
+                d["function"]();
             }
             else {
                 clearSimulation();

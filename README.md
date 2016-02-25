@@ -45,7 +45,3 @@ Lee Stemkoski.
 * The initial conditions for the three-body planar periodic orbits are from
 [arXiv:1303.0181 **[physics.class-ph]**](http://arxiv.org/abs/1303.0181).
 * GitHub corner by [Tim Holman](http://tholman.com/github-corners/).
-
-# License
-
-[GPL-3.0+](https://github.com/sunsistemo/sunsistemo/blob/master/LICENSE.txt)
