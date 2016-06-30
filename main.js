@@ -42,7 +42,7 @@ let menuList = [
     {"label": "Angular Momentum", "function": systems.genBodiesRot, "args": [200, "solar", true, false]},
     {"label": "Angular with Bounce", "function": systems.genBodiesRot, "args": [200, "balls", true, true, true]},
     {"label": "Choreographies", "function": showSubmenu, "args": [choreoSubmenuList]},
-    {"label": "About", "function": function () { window.open("sunsistemo.pdf"); }, "args": []}
+    {"label": "About", "function": function () { window.open("report/sunsistemo.pdf"); }, "args": []}
 ];
 gui(menuList);
 
