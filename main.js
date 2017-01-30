@@ -1,4 +1,4 @@
-let THREE = require("three");
+import * as THREE from "three";
 let OrbitControls = require("three-orbit-controls")(THREE);
 let d3 = require("d3");
 
@@ -324,6 +324,7 @@ function init() {
             transparent: false, blending: THREE.AdditiveBlending
         });
         let sprite = new THREE.Sprite(spriteMaterial);
+        sun.geometry.computeBoundingSphere();
         let glowRadius = sun.geometry.boundingSphere.radius * 3;
         sprite.scale.set(glowRadius, glowRadius, 1.0);
         sun.add(sprite);
